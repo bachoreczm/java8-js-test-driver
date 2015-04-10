@@ -1,7 +1,7 @@
 # java8-jstd
-Javascript tester in java8 (you <b>DON'T NEED BROWSER</b>).
+Javascript tester in java8 (you <b>DON'T NEED a BROWSER</b>).
 
-This is basically compatible with js-test-driver project.
+This is basically compatible with the js-test-driver project.
 
 ##Usage
 
