@@ -3,34 +3,6 @@
           "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
           "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
-<!--                                                                     -->
-<!--                                                                     -->
-<!-- Ezt a configot egy resz a sun-os guidline-ok alapjan                -->
-<!-- raktam ossze, amit a check-style disztribucioban volt benne.        -->
-<!-- Masreszt a gesoft_check.ml alapjan.                                 -->
-<!-- Elobbihez: http://checkstyle.sourceforge.net/                       -->
-<!-- Utobbihoz: http://geosoft.no/development/javastyle.html             -->
-<!-- A kovetkezo kommenteket irtam en:                                   -->
-<!--                                                                     -->
-<!-- SUN      : azt jelenti, hogy a sun-os xml-bol hoztam at             -->
-<!-- GEO_PROP : azt jelenti, hogy ez a module volta sun-nal is es itt is -->
-<!--            de a sun-nal nem volt itt ez a property, es meghagytam   -->
-<!-- SUN_PROP : azt jelent, hogy ez a module volta sun-nal is es itt is  -->
-<!--            de a sun-nal nem volt itt ez a property, de kiszedtem    -->
-<!-- GEO_ERR  : a geosoftban volt, a sun-ban nem, es nekem nem mukodik   -->
-<!-- GEO      : a geosoftban volt, a sun-ban nem, de beleraktam          -->
-<!--                                                                     -->
-<!-- TODO: nem vilagos, hogy imk azok, amik voltak a gesoftban,          -->
-<!--       de a sun-ban nem ezek most megmaradtak.                       -->
-<!--       Illetve amit tudok azt GEO-val megjeloltem                    -->
-<!--                                                                     -->
-<!--                                                                     -->
-<!--                                                                     -->
-<!--                                                                     -->
-<!--                                                                     -->
-<!--                                                                     -->
-
-
 <module name="Checker">
   <module name="SuppressionCommentFilter">
     <property name="offCommentFormat" value="CHECKSTYLE.OFF\: ([\w\|]+)"/>
@@ -38,37 +10,13 @@
     <property name="checkFormat" value="$1"/>
   </module>
 
-  <!-- SUN: Checks that a package-info.java file exists for each package.     -->
-  <!-- See http://checkstyle.sf.net/config_javadoc.html#JavadocPackage -->
-
-  <!-- Checks that a package.html file exists for each package. -->
-  <!-- GEO_ERR: -->
-  <!--    <module name="PackageHtml"/> -->
-
-  <!-- Checks whether files end with a new line. -->
   <module name="NewlineAtEndOfFile"/>
 
-  <!-- Checks that property files contain the same keys. -->
   <module name="Translation"/>
 
-  <!-- SUN: Checks for Size Violations.                    -->
-  <!-- See http://checkstyle.sf.net/config_sizes.html -->
   <module name="FileLength"/>
 
-  <!-- SUN: ez itt nem volt, csak a TreeWalker-en belul a -->  
-  <!--      TabCharacter modul, de az nem mukodik nekem   -->
   <module name="FileTabCharacter"/>
-
-  <!-- SUN: Miscellaneous other checks.                   -->
-  <!-- See http://checkstyle.sf.net/config_misc.html -->
-  <!--
-  <module name="RegexpSingleline">
-    <property name="format" value="\s+$"/>
-    <property name="minimum" value="0"/>
-    <property name="maximum" value="0"/>
-    <property name="message" value="Line has trailing spaces."/>
-  </module>
-  -->
 
   <module name="SuppressWarningsFilter" />
 
@@ -76,7 +24,7 @@
     <module name="SuppressWarningsHolder" />
 
     <module name="FileContentsHolder"/>
-    <!-- SUN: -->
+    
     <module name="MethodName"/>
 
     <module name="JavadocVariable">
@@ -89,81 +37,33 @@
       <property name="allowedAnnotations" value="Override, Before, After, BeforeClass, Test"/>
     </module>
 
-    <!-- Naming conventions for packages. -->
     <module name="PackageName">
       <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
     </module>
 
-    <!-- Naming conventions for classes and interfaces. -->
     <module name="TypeName"/>
 
-    <!-- Naming conventions for constants. -->
-      <!-- TODO: Problem with this is that it should cover basic     -->
-      <!-- types only, and not names like instance_ and logger_ etc. -->
-      <!-- SUN: ez ki volt valamiert, talan a fenti TODO miat kommentezve -->
-    <!--      a geosoft-osbol, visszaraktam -->
     <module name="ConstantName"/>
 
-
-    <!-- Naming conventions for class variables. -->
-    <!-- GEO: ez jo otletnek tartom, beleraktam -->
     <module name="MemberName">
-    <!-- MOST kiszedtem mert nagyon nincs igy -->
-    <!--      <property name="format" value="^[a-z][a-zA-Z0-9]*_$"/> -->
       <property name="format" value="^[a-z][a-zA-Z0-9]*_*$"/>
     </module>
 
-    <!-- SUN:
-    kiszedtem, merta tesztekben igenis vannak magic numberek (aqua)
-    <module name="MagicNumber"/>
-    -->
-
-    <!-- Naming conventions local variables. -->
     <module name="LocalFinalVariableName"/>
     <module name="LocalVariableName"/>
-    <!-- MOST: kezdodhet _-sal is -->
     <module name="ParameterName">
       <property name="format" value="^_*[a-z][a-zA-Z0-9]*$"/>
     </module>
 
 
-<!--     
-    <module name="StaticVariableName">
-      SUN_PROP: kiszedtem, most ez ALMA_KORTE tipusu lehet
-      <property name="format" value="^[a-z][a-zA-Z0-9]*_$"/>
-    </module>
-           -->
-
-    <!-- Avoid star imports -->
-    <!-- MOST megngedem -->
-    <!--  <module name="AvoidStarImport"/> -->
-
-    <!-- Avoid imports of the sun.* packages -->
-    <!-- MOST megngedem -->
-    <!-- <module name="IllegalImport"/> -->
-
-    <!-- Avoid redundant imports -->
     <module name="RedundantImport"/>
 
-    <!-- Avoid unused imports -->
     <module name="UnusedImports"/>
 
-    <!-- GEO: Ensure certian import order -->
-    <!-- MOST nem figyelunk a sorrendre-->
-    <!--
-    <module name="ImportOrder">
-      <property name="groups" value="java,javax"/>
-      <property name="ordered" value="true"/>
-      <property name="separated" value="true"/>
-    </module>
-    -->
-    <!-- Lines should be maximum of 90 characters -->
     <module name="LineLength">
-      <!-- GEO_PROP: -->
       <property name="max" value="80"/>
     </module>
 
-    <!-- SUN: -->
     <module name="MethodLength">
       <property name="tokens" value="METHOD_DEF"/>
       <property name="max" value="20"/>
@@ -173,87 +73,35 @@
     <module name="AnonInnerLength">
       <property name="max" value="10"/>
     </module>
-    <!-- SUN: -->
+
     <module name="ParameterNumber"/>
-    <!-- SUN: -->
+
     <module name="EmptyForIteratorPad"/>
-    <!-- SUN: -->
+
     <module name="GenericWhitespace"/>
 
-    <!--  -->
     <module name="MethodParamPad"/>
 
-    <!-- No whitespace after selected tokens -->
     <module name="NoWhitespaceAfter"/>
 
-    <!--  -->
     <module name="NoWhitespaceBefore"/>
 
-    <!--  -->
     <module name="OperatorWrap">
-      <!-- GEO_PROP: -->
-    <!--property name="tokens" value="ASSIGN,
-	                                 BAND,
-					                 BAND_ASSIGN,
-					                 BOR,
-					                 BOR_ASSIGN,
-					                 BSR,
-					                 BSR_ASSIGN,
-					                 BXOR,
-					                 BXOR_ASSIGN,
-					                 COLON,
-					                 DIV,
-					                 DIV_ASSIGN,
-					                 EQUAL,
-					                 GE,
-					                 GT,
-					                 LAND,
-					                 LE,
-					                 LITERAL_INSTANCEOF,
-					                 LOR,
-					                 LT,
-					                 MINUS,
-					                 MINUS_ASSIGN,
-					                 MOD,
-					                 MOD_ASSIGN,
-					                 NOT_EQUAL,
-					                 PLUS,
-					                 PLUS_ASSIGN,
-					                 QUESTION,
-					                 SL,
-					                 SL_ASSIGN,
-					                 SR,
-					                 SR_ASSIGN,
-					                 STAR,
-					                 STAR_ASSIGN"/>
-      <property name="option" value="eol"/-->
     </module>
 
-    <!--  -->
     <module name="ParenPad"/>
 
-    <!-- No space in a case oparation "(int)" not "( int )" -->
     <module name="TypecastParenPad">
-      <!-- GEO_PROP: -->
       <property name="option" value="nospace"/>
     </module>
 
-    <!-- Avoid tab chacraters in the code -->
-    <!-- GEO_ERR: kiszedtem, mert nem fut ezzel, van helyette FileTabCharacter -->
-    <!-- <module name="TabCharacter"/> -->
-
-    <!-- Space after comma, semicolon and casts -->
     <module name="WhitespaceAfter">
-      <!-- GEO_PROP: -->
       <property name="tokens" value="COMMA,
                                      SEMI,
                                      TYPECAST"/>
     </module>
 
-    <!-- Ensure whitespace around all operators other than -->
-    <!-- GENERIC_START and GENERIC_END                     -->
     <module name="WhitespaceAround">
-      <!-- GEO_PROP: -->
       <property name="tokens" value="ASSIGN,
                                  BAND,
 					                 BAND_ASSIGN,
@@ -305,214 +153,66 @@
 					                 WILDCARD_TYPE"/>
 	</module>
 
-    <!-- Check modifier order:          -->
-	<!--   public | protected | private -->
-	<!--   abstract                     -->
-	<!--   static                       -->
-	<!--   final                        -->
-	<!--   transient | volatile         -->
-	<!--   synchronized                 -->
-	<!--   native                       -->
-	<!--   strictfp                     -->
-    <module name="ModifierOrder"/>
+        <module name="ModifierOrder"/>
 
-	<!-- Avoid redundant modifiers -->
-    <module name="RedundantModifier"/>
+        <module name="RedundantModifier"/>
 
-    <!-- Avoid empty blocks
-    kiszedtem (aqua)
-    <module name="EmptyBlock"/>
-    -->
+        <module name="LeftCurly"/>
 
-	<!-- Classes, interfaces and methods have left brace on a new line -->
-    <module name="LeftCurly">
-      <!-- SUN_PROP:
-	       <property name="option" value="nl"/>
-	       <property name="maxLineLength" value="80"/>
-	       <property name="tokens" value="CLASS_DEF,
-	                                      CTOR_DEF,
-	                                      INTERFACE_DEF,
-					                      METHOD_DEF"/>
-           -->
-    </module>
+        <module name="LeftCurly"/>
 
-	<!-- The others have left brace at eol -->
-    <module name="LeftCurly">
-      <!-- SUN_PROP:
-	       <property name="option" value="eol"/>
-	       <property name="maxLineLength" value="80"/>
-	       <property name="tokens" value="LITERAL_CATCH,
-					                      LITERAL_DO,
-					                      LITERAL_ELSE,
-					                      LITERAL_FINALLY,
-					                      LITERAL_FOR,
-					                      LITERAL_IF,
-					                      LITERAL_SWITCH,
-					                      LITERAL_SYNCHRONIZED,
-					                      LITERAL_TRY,
-					                      LITERAL_WHILE"/>
-           -->
-    </module>
+        <module name="RightCurly"/>
 
-	<!-- TODO -->
-    <module name="RightCurly">
-      <!-- SUN_PROP:
-	       <property name="option" value="alone"/>
-	       <property name="tokens" value="LITERAL_CATCH,
-	                                      LITERAL_FINALLY,
-					                      LITERAL_ELSE"/>
-           -->
-	</module>
+        <module name="AvoidNestedBlocks">
+            <property name="allowInSwitchCase" value="true"/>
+        </module>
 
-    <!-- Avoid nested blocks other than in switch statements -->
-    <module name="AvoidNestedBlocks">
-      <!-- GEO_PROP: -->
-	  <property name="allowInSwitchCase" value="true"/>
-	</module>
+        <module name="AvoidInlineConditionals"/>
 
-    <!-- hoztam -->
-    <module name="AvoidInlineConditionals"/>
+        <module name="CovariantEquals"/>
 
-	<!-- Checks that classes that define a covariant equals() method -->
-    <!-- also override method equals(java.lang.Object)               -->
-    <module name="CovariantEquals"/>
+        <module name="EmptyStatement"/>
 
-	<!-- Avoid empty statements -->
-        <!-- TODO: Should be alloed in empty for-loop -->
-        <!--
-        kiszedtem (aqua) megsem
-        -->
-    <module name="EmptyStatement"/>
-	<!-- Checks that classes that override equals() -->
-	<!-- also override hashCode()
-        kiszedtem (aqua)
-    <module name="EqualsHashCode"/>
-        -->
-
-	<!-- Checks that local variables and parameters that are never -->
-	<!-- are declared final                                        -->
-	<!--
-	   <module name="FinalLocalVariable">
-	     <property name="tokens" value="PARAMETER_DEF,
-                                        VARIABLE_DEF"/>
-	   </module>
-	   -->
-
-	<!-- Check that method/constructor/catch block parameters are final -->
-	<!-- SUN: ez itt ki volt kommentezve, de sun-osban, van: visszaraktam, MOST kiszedtem  -->
-        <!-- <module name="FinalParameters"/> -->
-
-
-	<!-- Check that a name doens't hide another name -->
-    <module name="HiddenField"/>
+        <module name="HiddenField"/>
     
-    <!-- hoztam -->
-    <module name="IllegalInstantiation"/>
+        <module name="IllegalInstantiation"/>
 
-	<!-- TODO
-	     <module name="IllegalTokenText">
-	       <property name="tokens" value="NUM_FLOAT,NUM_DOUBLE"/>
-	     </module>
-	     -->
+        <module name="InnerAssignment"/>
 
-	<!-- Avoid inner assignments -->
-    <module name="InnerAssignment"/>
+        <module name="MissingSwitchDefault"/>
 
-	<!-- Require default clause in switch statements -->
-    <module name="MissingSwitchDefault"/>
+        <module name="ModifiedControlVariable"/>
 
-	<!-- Avoid modifying control variables -->
-    <module name="ModifiedControlVariable"/>
+        <module name="SimplifyBooleanExpression"/>
 
-	<!-- Avoid redundant throws -->
-    <!--module name="RedundantThrows">
-      < GEO_PROP: >
-	  <property name="allowUnchecked" value="true"/>
-	</module-->
+        <module name="SimplifyBooleanReturn"/>
 
-	<!-- Require simple boolean expressions -->
-    <module name="SimplifyBooleanExpression"/>
+        <module name="StringLiteralEquality"/>
 
-	<!-- Require simple boolean expressions -->
-    <module name="SimplifyBooleanReturn"/>
+        <module name="SuperClone"/>
 
-	<!-- Capture string compare using == -->
-	<module name="StringLiteralEquality"/>
+        <module name="SuperFinalize"/>
 
-	<!-- Checks that an overriding clone() method invokes super.clone() -->
-	<module name="SuperClone"/>
+        <module name="PackageDeclaration"/>
 
-	<!-- Checks that an overriding finalize() method invokes -->
-	<!-- super.finalize()                                    -->
-	<module name="SuperFinalize"/>
-
-        <!-- Disallow catcing exception base classes
-        kiszedtem (aqua)
-	<module name="IllegalCatch"/>
-        -->
-
-        <!-- Disallow throwing exception base classes
-	<module name="IllegalThrows"/>
-        -->
-
-	<!-- Require all classes to be in a package -->
-	<module name="PackageDeclaration"/>
-
-	<!-- Ensures correct layout of JUnit test cases -->
 	<module name="JUnitTestCase"/>
 
-	<!-- Enforce the following declaration order: -->
-	<!--   1. Class variables    -->
-	<!--   2. Instance variables -->
-	<!--   3. Ctors              -->
-	<!--   4. Methods            -->
-        <!-- MOST kiszedtem --> 
-<!--	<module name="DeclarationOrder"/> -->
-
-        <!-- Disallow parameter assignment 
-        aqua: kiszedtem
-	<module name="ParameterAssignment"/>
-        -->
-
-        <!-- Avoid explicit initialization to the default value
-        kiszedtem (aqua)
-	<module name="ExplicitInitialization"/>
-        -->
-
-	<!-- Ensure the default clasue is the last case in a switch -->
 	<module name="DefaultComesLast"/>
 
-	<!-- Disallow non-commented swicth fall throug -->
 	<module name="FallThrough"/>
 
-	<!-- Each variable should be declared individually -->
 	<module name="MultipleVariableDeclarations"/>
 
-	<!-- Avoid unnecessary parantheses -->
 	<module name="UnnecessaryParentheses"/>
 
-        <!-- Make sure only static finals are public
-        kiszedtem (aqua)
-    <module name="VisibilityModifier"/>
-        -->
+        <module name="FinalClass"/>
 
-	<!-- Class with private constructor must be final -->
-    <module name="FinalClass"/>
+        <module name="HideUtilityClassConstructor"/>
 
-    <module name="HideUtilityClassConstructor"/>
+        <module name="InterfaceIsType"/>
 
-    <!-- hoztam -->
-    <module name="InterfaceIsType"/>
-
-    <!-- Require classes to be either abstract or final 
-    kiszedtem (aqua)
-    <module name="DesignForExtension"/>
-    -->
-
-	<!-- Ensures that exception classes are immutable -->
 	<module name="MutableException"/>
 
-	<!-- Flag overly complex constructions -->
 	<module name="ClassFanOutComplexity">
 	  <property name="max" value="30"/>
 	</module>
@@ -521,48 +221,16 @@
 	</module>
 	<module name="NPathComplexity"/>
 
-  <module name="Regexp">
-    <property name="format" value="[ \t]+$"/>
-    <property name="illegalPattern" value="true"/>
-    <property name="message" value="Trailing whitespace"/>
-  </module>
+        <module name="Regexp">
+            <property name="format" value="[ \t]+$"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="message" value="Trailing whitespace"/>
+        </module>
 
-	<!-- Trap trailing spaces -->
-    <!--    <module name="GenericIllegalRegexp">
-            <property name="format" value="\s+$"/>
-            <property name="message" value="Line has trailing spaces."/>
-    </module>
-    -->
-    <!-- Identify TODOs
-    kiszedtem, ez minek? miert ne lehetnenek TODO-k? (aqua)
-	<module name="TodoComment">
-       GEO_PROP: 
-	  <property name="format" value="TODO"/>
-	</module>
-    -->
-
-    <!-- Flag uncommented main() methods (debugging left-overs)
-    kiszedtem (aqua)
-	<module name="UncommentedMain"/>
-    -->
-
-	<!-- Require long constants to be defined by uppercase L -->
 	<module name="UpperEll"/>
 
-	<!-- Array brackets on type not varaible -->
 	<module name="ArrayTypeStyle"/>
 
-	<!-- Indentations >
-	<module name="Indentation">
-	  <property name="basicOffset" value="2"/>
-	  <property name="braceAdjustment" value="0"/>
-	  <property name="caseIndent" value="2"/>
-	</module-->
-
-	<!-- Avoid trailing comments -->
-        <!-- MOST megengedem -->
-	<!-- <module name="TrailingComment"/> -->
-
-  </module>
+    </module>
 
 </module>

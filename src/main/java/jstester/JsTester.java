@@ -29,48 +29,50 @@ public final class JsTester {
   /**
    * @param testFile
    *          the test js file path (e.g.: javascript.test.file_name)
-   * @param srcFile
-   *          the src js file path (e.g.: javascript.test.file_name)
+   * @param srcFiles
+   *          the src js files pathes (e.g.: javascript.test.file_name)
    * @return the errors string
    * @throws IOException
    *           if can not read the source files
    * @throws ScriptException
    *           if something wrong with the evaulation of the js files
    */
-  public static String runtestsAndGetErrors(String testFile, String srcFile)
+  public static String runtestsAndGetErrors(String testFile, String... srcFiles)
       throws IOException, ScriptException {
-    final JsFileProperties srcCode = getCode(srcFile);
+    final JsFileProperties[] srcCodes = getCodes(srcFiles);
     final JsFileProperties testCode = getCode(testFile);
-    final String userCode = testCode + "\n" + srcCode;
+    final String userCode = computeUserCode(testCode, srcCodes);
     final JsFileProperties testUtil = getCode("javascript.test.test_util");
     final String runningTests = "runAllTests();\ngetTestErrors();";
-    final String code = testUtil + "\n" + userCode + "\n" + runningTests;
+    final String code = computeCode(testUtil, userCode, runningTests);
     String stackTraces = (String) ENGINE.eval(code);
     StackTraceProperties stackProps = new StackTraceProperties(testCode,
-        testUtil, srcCode.getFileName());
+        testUtil, srcCodes);
     return formattingStackTraces(stackTraces, stackProps);
   }
 
-  /**
-   * @param testFile
-   *          the test js file path (e.g.: javascript.test.file_name)
-   * @return the errors string
-   * @throws IOException
-   *           if can not read the source files
-   * @throws ScriptException
-   *           if something wrong with the evaulation of the js files
-   */
-  public static String runtestsAndGetErrors(String testFile)
-      throws IOException, ScriptException {
-    final JsFileProperties testCode = getCode(testFile);
-    final String userCode = testCode.toString();
-    final JsFileProperties testUtil = getCode("javascript.test.test_util");
-    final String runningTests = "runAllTests();\ngetTestErrors();";
-    final String code = testUtil + "\n" + userCode + "\n" + runningTests;
-    String stackTraces = (String) ENGINE.eval(code);
-    StackTraceProperties stackProps = new StackTraceProperties(testCode,
-        testUtil, "");
-    return formattingStackTraces(stackTraces, stackProps);
+  private static JsFileProperties[] getCodes(String[] srcFiles)
+      throws IOException {
+    JsFileProperties[] codes = new JsFileProperties[srcFiles.length];
+    for (int i = 0; i < srcFiles.length; ++i) {
+      codes[i] = getCode(srcFiles[i]);
+    }
+    return codes;
+  }
+
+  private static String computeUserCode(JsFileProperties testCode,
+      JsFileProperties[] srcCodes) {
+    StringBuilder userCode = new StringBuilder();
+    userCode.append(testCode.toString());
+    for (JsFileProperties srcCode : srcCodes) {
+      userCode.append("\n" + srcCode);
+    }
+    return userCode.toString();
+  }
+
+  private static String computeCode(JsFileProperties testUtil, String userCode,
+      String runningTests) {
+    return testUtil + "\n" + userCode + "\n" + runningTests;
   }
 
   private static JsFileProperties getCode(String path) throws IOException {

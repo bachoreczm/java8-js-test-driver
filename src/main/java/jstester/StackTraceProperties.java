@@ -4,13 +4,13 @@ final class StackTraceProperties {
 
   private final JsFileProperties testCode;
   private final JsFileProperties testUtil;
-  private final String srcName;
+  private final JsFileProperties[] srcCodes;
 
   StackTraceProperties(JsFileProperties testCodeProps,
-      JsFileProperties testUtilProps, String sourceName) {
+      JsFileProperties testUtilProps, JsFileProperties... sourceProps) {
     testCode = testCodeProps;
     testUtil = testUtilProps;
-    srcName = sourceName;
+    srcCodes = sourceProps;
   }
 
   JsFileProperties getTestCode() {
@@ -21,7 +21,11 @@ final class StackTraceProperties {
     return testUtil;
   }
 
-  String getSrcName() {
-    return srcName;
+  JsFileProperties getCodeByIndex(int i) {
+    if (i == 0) {
+      return testCode;
+    } else {
+      return srcCodes[i - 1];
+    }
   }
 }

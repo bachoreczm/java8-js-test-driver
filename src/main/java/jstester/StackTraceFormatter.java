@@ -76,18 +76,26 @@ final class StackTraceFormatter {
       final String lineNumString = partTwo.substring(0, partTwo.length() - 1);
       int lineNum = Integer.parseInt(lineNumString);
       lineNum -= stackProps.getTestUtil().getLineNumbers() + 1;
-      if (lineNum - stackProps.getTestCode().getLineNumbers() - 1 > 0) {
-        lineNum -= stackProps.getTestCode().getLineNumbers() + 1;
-        final String line = partOne + ":" + lineNum + ")";
-        return line.replace("<eval>", stackProps.getSrcName() + ".js");
-      } else {
-        final String line = partOne + ":" + lineNum + ")";
-        JsFileProperties testCode = stackProps.getTestCode();
-        return line.replace("<eval>", testCode.getFileName() + ".js");
+      int codeIndex = 0;
+      while (canDecraseLineNum(stackProps, lineNum, codeIndex)) {
+        lineNum -= stackProps.getCodeByIndex(codeIndex).getLineNumbers() + 1;
+        ++codeIndex;
       }
+      final String line = partOne + ":" + lineNum + ")";
+      return line.replace("<eval>", getJsFile(stackProps, codeIndex));
     } else {
       return row;
     }
+  }
+
+  private static String getJsFile(StackTraceProperties props, int codeIndex) {
+    return props.getCodeByIndex(codeIndex).getFileName() + ".js";
+  }
+
+  private static boolean canDecraseLineNum(StackTraceProperties stackProps,
+      int lineNum, int codeIndex) {
+    int lineNumbers = stackProps.getCodeByIndex(codeIndex).getLineNumbers();
+    return lineNum - lineNumbers - 1 > 0;
   }
 
   private static String formatAssertationCalls(final String row) {
