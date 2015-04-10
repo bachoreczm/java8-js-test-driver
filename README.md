@@ -5,9 +5,9 @@ This is basically compatible with the js-test-driver project.
 
 ##Usage
 
-Call the 'JsTester' (jstester package) class 'runtestsAndGetErrors' function.
+Call the 'runtestsAndGetErrors()' function of the 'JsTester' class (jstester package).
 
-Your js files must be on classpath (e.g. in the resources folder).
+Your js files must be on the classpath (e.g. in the resources folder).
 
 ###Example test_js.js file (e.g.: src/test/resources/javascript/test.js)
 <pre>
