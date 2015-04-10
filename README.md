@@ -40,6 +40,9 @@ public class SimpleTest {
 }
 </pre>
 
+You can call runtestsAndGetErrors with your srcFiles (no matter how much, it can be 0, or 1, 2, 3, ...).
+<code>runtestsAndGetErrors(testFile, srcFile1, srcFile2, ...)</code>
+
 ##Assertations
 ###assertTrue(condition)
 Fails, if the condition is false.
