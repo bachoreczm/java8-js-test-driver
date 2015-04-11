@@ -5,7 +5,7 @@ This is basically compatible with the js-test-driver project.
 
 ##Usage
 
-Call the 'runtestsAndGetErrors()' function of the 'JsTester' class (jstester package).
+Call the 'runTestsAndGetErrors()' function of the 'JsTester' class (jstester package).
 
 Your js files must be on the classpath (e.g. in the resources folder).
 
@@ -21,7 +21,7 @@ ExampleTest.prototype.test = function() {
 ###Example SimpleTest.java file
 
 <pre>
-import static jstester.JsTester.runtestsAndGetErrors;
+import static jstester.JsTester.runTestsAndGetErrors;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -35,13 +35,13 @@ public class SimpleTest {
   @Test
   public void runJsTests() throws IOException, ScriptException {
     String testFile = "javascript.test_js";
-    assertTrue(runtestsAndGetErrors(testFile).equals(""));
+    assertTrue(runTestsAndGetErrors(testFile).equals(""));
   }
 }
 </pre>
 
-You can call runtestsAndGetErrors with your srcFiles (no matter how much, it can be 0, or 1, 2, 3, ...).
-<code>runtestsAndGetErrors(testFile, srcFile1, srcFile2, ...)</code>
+You can call runTestsAndGetErrors with your srcFiles (no matter how much, it can be 0, or 1, 2, 3, ...).
+<code>runTestsAndGetErrors(testFile, srcFile1, srcFile2, ...)</code>
 
 ##Assertations
 ###assertTrue(condition)

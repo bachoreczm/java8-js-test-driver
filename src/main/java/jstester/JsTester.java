@@ -37,7 +37,7 @@ public final class JsTester {
    * @throws ScriptException
    *           if something wrong with the evaulation of the js files
    */
-  public static String runtestsAndGetErrors(String testFile, String... srcFiles)
+  public static String runTestsAndGetErrors(String testFile, String... srcFiles)
       throws IOException, ScriptException {
     final JsFileProperties[] srcCodes = getCodes(srcFiles);
     final JsFileProperties testCode = getCode(testFile);
