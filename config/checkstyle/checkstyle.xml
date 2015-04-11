@@ -71,7 +71,7 @@
     </module>
 
     <module name="AnonInnerLength">
-      <property name="max" value="10"/>
+      <property name="max" value="15"/>
     </module>
 
     <module name="ParameterNumber"/>
