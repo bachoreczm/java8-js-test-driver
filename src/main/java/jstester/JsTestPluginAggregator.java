@@ -6,10 +6,6 @@ import java.util.List;
 
 public class JsTestPluginAggregator implements Iterable<JsTestPlugin> {
 
-  /**
-   * An aggregator, which contains only the {@link DefaultJsTestPlugin}.
-   */
-  public static final JsTestPluginAggregator EMPTY = emptyAggregator();
   private final DefaultJsTestPlugin defaultPlugin;
   private final List<JsTestPlugin> plugins;
 
@@ -24,6 +20,13 @@ public class JsTestPluginAggregator implements Iterable<JsTestPlugin> {
   private JsTestPluginAggregator(int initCapacity) {
     defaultPlugin = new DefaultJsTestPlugin();
     plugins = new ArrayList<JsTestPlugin>(initCapacity);
+  }
+
+  /**
+   * @return an aggregator which contains only the {@link DefaultJsTestPlugin}.
+   */
+  public static JsTestPluginAggregator empty() {
+    return new JsTestPluginAggregator(0);
   }
 
   /**
@@ -76,9 +79,5 @@ public class JsTestPluginAggregator implements Iterable<JsTestPlugin> {
         return nextPlugin(index);
       }
     };
-  }
-
-  private static JsTestPluginAggregator emptyAggregator() {
-    return new JsTestPluginAggregator(0);
   }
 }

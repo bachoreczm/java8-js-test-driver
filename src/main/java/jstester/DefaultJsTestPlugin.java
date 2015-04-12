@@ -17,6 +17,9 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
   @Override
   public void eval(JsFileProperties[] userCodes) throws IOException,
       ScriptException {
+    if (userCodes.length == 0) {
+      return;
+    }
     final String userCode = computeUserCode(userCodes);
     final JsFileProperties testUtil = getCode(JS_TEST_UTIL);
     final String runningTests = "runAllTests();\ngetTestErrors();";

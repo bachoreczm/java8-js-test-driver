@@ -1,7 +1,5 @@
 package jstester;
 
-import static jstester.JsTestPluginAggregator.EMPTY;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +43,7 @@ public final class JsTester {
    */
   public static String runTestsAndGetErrors(String... jsFileNames)
       throws IOException, ScriptException {
-    return runTestsAndGetErrors(EMPTY, jsFileNames);
+    return runTestsAndGetErrors(JsTestPluginAggregator.empty(), jsFileNames);
   }
 
   /**
