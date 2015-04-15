@@ -18,15 +18,14 @@ public final class JsTester {
    * The path of the test_util.js
    */
   public static final String JS_TEST_UTIL = "javascript.test.test_util";
-  /**
-   * Javascript engine.
-   */
-  public static final ScriptEngine ENGINE = getJsEngine();
 
   private JsTester() {
   }
 
-  private static ScriptEngine getJsEngine() {
+  /**
+   * @return new javascript engine.
+   */
+  public static ScriptEngine newEngine() {
     final ScriptEngineManager manager = new ScriptEngineManager();
     return manager.getEngineByName("JavaScript");
   }
