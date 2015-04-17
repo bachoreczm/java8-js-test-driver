@@ -1,9 +1,10 @@
-var TestUtilTestObjects = [];
+var TestUtilTestObjects = {};
+var SkippedTestFunctions = {};
 var TestUtilErrors = [];
 
 var TestCase = function(name) {
   var Obj = function() {};
-  TestUtilTestObjects.push(new Obj());
+  TestUtilTestObjects[name] = new Obj();
   return Obj;
 };
 
@@ -127,13 +128,17 @@ var getMethods = function (obj) {
   return res;
 };
 
+var skipTestFunction = function(testClassName, functionName) {
+  SkippedTestFunctions[testClassName] = functionName;
+}; 
+
 var runAllTests = function() {
-  for (instanceIndex in TestUtilTestObjects) {
-    var testInstance = TestUtilTestObjects[instanceIndex];
+  for (instanceName in TestUtilTestObjects) {
+    var testInstance = TestUtilTestObjects[instanceName];
     var methods = getMethods(testInstance)
     for (index in methods) {
       var method = methods[index];
-	  if (method == undefined) {
+	  if (method == undefined || isSkipMethod(method, instanceName)) {
         continue;
       }
 	  try {
@@ -143,6 +148,10 @@ var runAllTests = function() {
 	  }
     }
   }
+};
+
+var isSkipMethod = function(method, instanceName) {
+  return (method + '') == SkippedTestFunctions[instanceName]
 };
 
 var getTestErrors = function() {

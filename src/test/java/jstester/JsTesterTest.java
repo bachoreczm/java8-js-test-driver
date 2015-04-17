@@ -40,10 +40,17 @@ public class JsTesterTest {
     String srcFile = "jstester.source";
     String stackTraces = runTestsAndGetErrors(testFile, srcFile);
     assertTrue(stackTraces.contains("AssertationError"));
-    assertTrue(stackTraces.contains("at assertEquals (test_util.js:113)"));
+    assertTrue(stackTraces.contains("at assertEquals (test_util.js:114)"));
     assertTrue(stackTraces.contains("at bug (jstester.source.js:17)"));
     assertTrue(stackTraces
         .contains("at test4 (jstester.test_for_stack_trace.js:20)"));
+  }
+
+  @Test
+  public void testSkip() throws IOException, ScriptException {
+    String testFile = "jstester.skip_some_tests";
+    String stackTraces = runTestsAndGetErrors(testFile);
+    assertTrue(stackTraces.equals(""));
   }
 
   @Test

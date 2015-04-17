@@ -1,6 +1,6 @@
 var AssertsTest = TestCase('AssertsTest');
 
-AssertsTest.prototype.test = function() {
+AssertsTest.prototype.testAssertions = function() {
   assertEquals(4, 4);
   assertArray([1, 2, 3]);
   var nullVariable = null;
