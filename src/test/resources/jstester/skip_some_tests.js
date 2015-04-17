@@ -6,7 +6,7 @@ SkipSomeTest.prototype.testAdd = function() {
 };
 
 // skip
-SkipSomeTest.prototype.testAdd = function() {
+SkipSomeTest.prototype.testBug = function() {
   assertEquals(3, 2);
 };
 
