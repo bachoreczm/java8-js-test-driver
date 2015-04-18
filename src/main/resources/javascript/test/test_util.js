@@ -154,6 +154,15 @@ var isSkipMethod = function(method, instanceName) {
   return (method + '') == SkippedTestFunctions[instanceName]
 };
 
+var JsTestDriverConsole = function() {
+};
+
+JsTestDriverConsole.prototype.log = function(message) {
+	TestUtilErrors.push('JAVA8JSTDLOG:' + message + '\n');
+};
+
+var console = new JsTestDriverConsole();
+
 var getTestErrors = function() {
   var errors = '';
   for (var i = 0; i < TestUtilErrors.length; ++i) {

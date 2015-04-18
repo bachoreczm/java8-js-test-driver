@@ -50,7 +50,17 @@ public class JsTesterTest {
   public void testSkip() throws IOException, ScriptException {
     String testFile = "jstester.skip_some_tests";
     String stackTraces = runTestsAndGetErrors(testFile);
-    assertTrue(stackTraces.equals(""));
+    assertEquals("", stackTraces);
+  }
+
+  @Test
+  public void testLog() throws IOException, ScriptException {
+    String testFile = "jstester.test_for_log";
+    JsTestPluginAggregator aggregator = JsTestPluginAggregator.empty();
+    String stackTraces = runTestsAndGetErrors(aggregator, testFile);
+    assertEquals("", stackTraces);
+    String expected = "this is a log message...\n";
+    assertEquals(expected, aggregator.getDefault().getLog());
   }
 
   @Test
