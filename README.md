@@ -50,6 +50,12 @@ Fails, if the condition is false.
 Fails, if the condition is true.
 ###assertEquals(expected, actual)
 Fails, if the actual variable is not equal to the expected.
+###assertNotEquals(expected, actual)
+Fails, if the actual variable is equal to the expected.
+###assertSame(expected, actual)
+Fails, if the actual variable is not same as the expected.
+###assertNotSame(expected, actual)
+Fails, if the actual variable is not same as the expected.
 ###assertNull(variable)
 Fails, if the given variable is null.
 ###assertNotNull(variable)
@@ -62,6 +68,18 @@ Fails, if the given variable is not undefined.
 Fails, if the given variable is an array.
 ###assertArrayEquals(expected, actual)
 Fails, if the given variables are arrays and there are same elements in the arrays.
+###assertTypeOf(expected, value)
+Fails, if the type of the given value is not the expected string.
+###assertBoolean(variable)
+Fails, if the type of the given variable is not boolean.
+###assertFunction(variable)
+Fails, if the type of the given variable is not function.
+###assertObject(variable)
+Fails, if the type of the given variable is not object.
+###assertNumber(variable)
+Fails, if the type of the given variable is not number.
+###assertString(variable)
+Fails, if the type of the given variable is not string.
 
 ##See also
 
