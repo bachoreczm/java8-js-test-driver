@@ -33,7 +33,7 @@ public class JsTesterTest {
     String srcFile = "jstester.source";
     String stackTraces = getStackTrace(testFile, srcFile);
     assertTrue(stackTraces.contains("AssertationError"));
-    assertTrue(stackTraces.contains("at assertEquals (test_util.js:116)"));
+    assertTrue(stackTraces.contains("at assertEquals (test_util.js:44)"));
     assertTrue(stackTraces.contains("at bug (jstester.source.js:17)"));
     assertTrue(stackTraces
         .contains("at test4 (jstester.test_for_stack_trace.js:20)"));

@@ -37,10 +37,44 @@ var assertFalse = function(condition) {
   }
 };
 
-var assertNotNull = function(variable) {
-  if (variable === null) {
+var assertEquals = function(expected, actual) {
+  if (expected != actual) {
     try {
-      throw new AssertationError();
+      var msg = 'Expected ' + expected + ', but was ' + actual + '.';
+      throw new AssertationError(msg);
+    } catch(err) {
+      TestUtilErrors.push(err.stack);
+    }
+  }
+};
+
+var assertNotEquals = function(expected, actual) {
+  if (expected == actual) {
+    try {
+      var msg = expected + ' and ' + actual + ' are equals.';
+      throw new AssertationError(msg);
+    } catch(err) {
+      TestUtilErrors.push(err.stack);
+    }
+  }
+};
+
+var assertSame = function(expected, actual) {
+  if (expected !== actual) {
+    try {
+      var msg = 'Expected ' + expected + ', but was ' + actual + '.';
+      throw new AssertationError(msg);
+    } catch(err) {
+      TestUtilErrors.push(err.stack);
+    }
+  }
+};
+
+var assertNotSame = function(expected, actual) {
+  if (expected === actual) {
+    try {
+      var msg = expected + ' and ' + actual + ' are the same.';
+      throw new AssertationError(msg);
     } catch(err) {
       TestUtilErrors.push(err.stack);
     }
@@ -49,6 +83,16 @@ var assertNotNull = function(variable) {
 
 var assertNull = function(variable) {
   if (variable !== null) {
+    try {
+      throw new AssertationError();
+    } catch(err) {
+      TestUtilErrors.push(err.stack);
+    }
+  }
+};
+
+var assertNotNull = function(variable) {
+  if (variable === null) {
     try {
       throw new AssertationError();
     } catch(err) {
@@ -109,13 +153,68 @@ var assertArrayEquals = function(expected, actual) {
   }
 };
 
-var assertEquals = function(expected, actual) {
-  if (expected != actual) {
+var assertTypeOf = function(expected, variable) {
+  if (typeof variable != expected) {
     try {
-      var msg = 'Expected ' + expected + ', but was ' + actual + '.';
-      throw new AssertationError(msg);
+      var errorMsg = 'Expected ' + expected + ', but was' + (typeof variable);
+      throw new AssertationError(errorMsg);
     } catch(err) {
-    	TestUtilErrors.push(err.stack);
+      TestUtilErrors.push(err.stack);
+    }
+  }
+};
+
+var assertBoolean = function(variable) {
+  if (typeof variable != 'boolean') {
+    try {
+      var errorMsg = 'Expected boolean, but was' + (typeof variable);
+      throw new AssertationError(errorMsg);
+    } catch(err) {
+      TestUtilErrors.push(err.stack);
+    }
+  }
+};
+
+var assertFunction = function(variable) {
+  if (typeof variable != 'function') {
+    try {
+      var errorMsg = 'Expected function, but was' + (typeof variable);
+      throw new AssertationError(errorMsg);
+    } catch(err) {
+      TestUtilErrors.push(err.stack);
+    }
+  }
+};
+
+var assertObject = function(variable) {
+  if (typeof variable != 'object') {
+    try {
+      var errorMsg = 'Expected object, but was' + (typeof variable);
+      throw new AssertationError(errorMsg);
+    } catch(err) {
+      TestUtilErrors.push(err.stack);
+    }
+  }
+};
+
+var assertNumber = function(variable) {
+  if (typeof variable != 'number') {
+    try {
+      var errorMsg = 'Expected number, but was' + (typeof variable);
+      throw new AssertationError(errorMsg);
+    } catch(err) {
+      TestUtilErrors.push(err.stack);
+    }
+  }
+};
+
+var assertString = function(variable) {
+  if (typeof variable != 'string') {
+    try {
+      var errorMsg = 'Expected string, but was' + (typeof variable);
+      throw new AssertationError(errorMsg);
+    } catch(err) {
+      TestUtilErrors.push(err.stack);
     }
   }
 };
