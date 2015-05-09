@@ -1,6 +1,8 @@
 var TestUtilTestObjects = {};
 var SkippedTestFunctions = {};
 var TestUtilErrors = [];
+var java8jstdSkippedTests = 0;
+var java8jstdTestsNum = 0;
 
 var TestCase = function(name) {
   var Obj = function() {};
@@ -129,6 +131,7 @@ var getMethods = function (obj) {
 };
 
 var skipTestFunction = function(testClassName, functionName) {
+  ++java8jstdSkippedTests;
   SkippedTestFunctions[testClassName] = functionName;
 }; 
 
@@ -141,6 +144,7 @@ var runAllTests = function() {
 	  if (method == undefined || isSkipMethod(method, instanceName)) {
         continue;
       }
+      ++java8jstdTestsNum;
 	  try {
 	    testInstance[method]();
 	  } catch(err) {
@@ -171,5 +175,9 @@ var getTestErrors = function() {
     }
     errors += TestUtilErrors[i];
   }
+  var passedTests = java8jstdTestsNum - TestUtilErrors.length;
+  var errorTests = java8jstdTestsNum - passedTests;
+  errors += '\nJAVA8JSTDSTATISTICS:' + passedTests + 'sep' +
+      errorTests + 'sep' + java8jstdSkippedTests;
   return errors;
 };

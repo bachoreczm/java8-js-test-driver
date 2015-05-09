@@ -63,7 +63,12 @@ public final class JsTester {
     for (JsTestPlugin plugin : plugins) {
       plugin.eval(userCodes);
     }
-    return plugins.getDefault().getLastStackTraces();
+    String lastStackTraces = plugins.getDefault().getLastStackTraces();
+    if (!"".equals(lastStackTraces)) {
+      System.out.println(plugins.getDefault().getStatAndLog());
+      throw new JsTestException(lastStackTraces);
+    }
+    return plugins.getDefault().getStatAndLog();
   }
 
   private static JsFileProperties[] getCodes(String[] srcFiles)
@@ -114,5 +119,18 @@ public final class JsTester {
       ++lineNumber;
     }
     return new JsFileProperties(path, lineNumber, sb.toString());
+  }
+
+  public static class JsTestException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * @param msg
+     *          the exception message
+     */
+    public JsTestException(String msg) {
+      super(msg);
+    }
   }
 }

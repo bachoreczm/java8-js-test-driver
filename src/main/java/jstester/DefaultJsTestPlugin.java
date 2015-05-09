@@ -14,8 +14,10 @@ import javax.script.ScriptException;
 public class DefaultJsTestPlugin implements JsTestPlugin {
 
   private static final String LOG_START = "JAVA8JSTDLOG:";
+  private static final String STATISTICS_START = "JAVA8JSTDSTATISTICS:";
   private String lastStackTraces;
   private String lastLogs;
+  private String statistics;
 
   @Override
   public void eval(JsFileProperties[] userCodes) throws IOException,
@@ -30,7 +32,7 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     final String runnerCode = skipTests + runningTests;
     final String code = computeCode(testUtil, userCode, runnerCode);
     String error = (String) newEngine().eval(code);
-    String stacktraces = computeLogAndRemoveFromError(error);
+    String stacktraces = computeLogAndStatAndRemoveFromError(error);
     StackTraceProperties stackProps = new StackTraceProperties(testUtil,
         userCodes);
     lastStackTraces = formattingStackTraces(stacktraces, stackProps);
@@ -43,12 +45,17 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     return lastLogs;
   }
 
-  private String computeLogAndRemoveFromError(final String error) {
+  private String computeLogAndStatAndRemoveFromError(final String error) {
     StringBuilder errorBuilder = new StringBuilder();
     StringBuilder logBuilder = new StringBuilder();
     for (String row : error.split("\\n")) {
+      if (row.trim().equals("")) {
+        continue;
+      }
       if (row.startsWith(LOG_START)) {
         logBuilder.append(row.split(LOG_START)[1] + "\n");
+      } else if (row.startsWith(STATISTICS_START)) {
+        statistics = row.split(STATISTICS_START)[1] + "\n";
       } else {
         errorBuilder.append(row + "\n");
       }
@@ -67,5 +74,23 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
   private static String computeCode(JsFileProperties testUtil, String userCode,
       String runningTests) {
     return testUtil + "\n" + userCode + "\n" + runningTests;
+  }
+
+  /**
+   * @return the log messages and statistics
+   */
+  public String getStatAndLog() {
+    return lastLogs + formatStatistics();
+  }
+
+  private String formatStatistics() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("-----------\n");
+    sb.append("STATISTICS:\n");
+    String[] splittedStats = statistics.split("sep");
+    sb.append("Passed: " + splittedStats[0] + ". ");
+    sb.append("Error: " + splittedStats[1] + ". ");
+    sb.append("Skipped: " + splittedStats[2]);
+    return sb.toString();
   }
 }
