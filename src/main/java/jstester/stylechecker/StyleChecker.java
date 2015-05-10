@@ -21,11 +21,13 @@ public class StyleChecker implements JsTestPlugin {
 
   private StringBuilder styleErrors;
 
+  private LineLengthChecker lineLengthChecker;
+
   @Override
   public void eval(JsFileProperties[] userCodes) throws IOException,
       ScriptException {
     init();
-    checkLineLength(userCodes);
+    styleErrors.append(lineLengthChecker.checkLineLength(userCodes));
     String userCode = computeUserCode(userCodes);
     String code = computeUseStrictCode(userCode);
     try {
@@ -37,19 +39,7 @@ public class StyleChecker implements JsTestPlugin {
 
   private void init() {
     styleErrors = new StringBuilder();
-  }
-
-  private void checkLineLength(JsFileProperties[] userCodes) {
-    for (int i = 0; i < userCodes.length; ++i) {
-      String[] actualFileRows = userCodes[i].toString().split("\n");
-      String actualFile = userCodes[i].getFileName();
-      for (int j = 0; j < actualFileRows.length; ++j) {
-        if (actualFileRows[j].length() > maxLineLength) {
-          String err = "Line too long (" + actualFile + ":" + (j + 1) + ").\n";
-          styleErrors.append(err);
-        }
-      }
-    }
+    lineLengthChecker = new LineLengthChecker(maxLineLength);
   }
 
   private String format(final String msg, final JsFileProperties[] userCodes) {
@@ -78,11 +68,14 @@ public class StyleChecker implements JsTestPlugin {
   }
 
   /**
-   * @return the style errors in {@link String}, if no errors found, then return
-   *         an empty string.
+   * If there is style errors, this method throws exception, and the errors is
+   * in its message.
    */
-  public String getStyleErrors() {
-    return styleErrors.toString();
+  public void styleErrors() {
+    String errors = styleErrors.toString();
+    if (!"".equals(errors)) {
+      throw new StyleError(errors);
+    }
   }
 
   /**
@@ -97,5 +90,18 @@ public class StyleChecker implements JsTestPlugin {
    */
   public void disableStrictMode() {
     strictMode = false;
+  }
+
+  public static class StyleError extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * @param msg
+     *          exception message.
+     */
+    public StyleError(String msg) {
+      super(msg);
+    }
   }
 }
