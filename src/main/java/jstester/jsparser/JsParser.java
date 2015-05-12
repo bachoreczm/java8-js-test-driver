@@ -50,22 +50,22 @@ public class JsParser {
   public List<Statement> getStatements(Statement statement) {
     if (statement instanceof LoopNode) {
       return ((LoopNode) statement).getBody().getStatements();
-    }
-    if (statement instanceof VarNode) {
+    } else if (statement instanceof VarNode) {
       return getStatements(((VarNode) statement).getAssignmentSource());
-    }
-    if (statement instanceof IfNode) {
+    } else if (statement instanceof IfNode) {
       IfNode ifNode = (IfNode) statement;
       List<Statement> ifStatements = new ArrayList<>();
       ifStatements.addAll(ifNode.getPass().getStatements());
-      ifStatements.addAll(ifNode.getFail().getStatements());
+      if (ifNode.getFail() != null) {
+        ifStatements.addAll(ifNode.getFail().getStatements());
+      }
       return ifStatements;
-    }
-    if (statement instanceof ExpressionStatement) {
+    } else if (statement instanceof ExpressionStatement) {
       ExpressionStatement expression = (ExpressionStatement) statement;
       return getStatements(expression.getExpression());
+    } else {
+      return new ArrayList<>();
     }
-    return new ArrayList<>();
   }
 
   private List<Statement> getStatements(Expression expression) {

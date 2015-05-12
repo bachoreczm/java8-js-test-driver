@@ -2,7 +2,7 @@ package jstester.stylechecker;
 
 import jstester.JsFileProperties;
 
-class LineLengthChecker {
+class LineLengthChecker implements StyleRule {
 
   private int lineLength;
 
@@ -10,7 +10,8 @@ class LineLengthChecker {
     lineLength = maxLineLength;
   }
 
-  public String checkLineLength(JsFileProperties[] userCodes) {
+  @Override
+  public String checkRule(JsFileProperties[] userCodes) {
     StringBuilder styleErrors = new StringBuilder();
     for (int i = 0; i < userCodes.length; ++i) {
       String[] actualFileRows = userCodes[i].toString().split("\n");

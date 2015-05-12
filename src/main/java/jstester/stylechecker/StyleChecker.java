@@ -27,7 +27,7 @@ public class StyleChecker implements JsTestPlugin {
   public void eval(JsFileProperties[] userCodes) throws IOException,
       ScriptException {
     init();
-    styleErrors.append(lineLengthChecker.checkLineLength(userCodes));
+    styleErrors.append(lineLengthChecker.checkRule(userCodes));
     String userCode = computeUserCode(userCodes);
     String code = computeUseStrictCode(userCode);
     try {
