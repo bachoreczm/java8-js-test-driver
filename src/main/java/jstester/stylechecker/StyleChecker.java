@@ -21,13 +21,15 @@ public class StyleChecker implements JsTestPlugin {
 
   private StringBuilder styleErrors;
 
-  private LineLengthChecker lineLengthChecker;
+  private StyleRule lineLengthChecker;
+  private StyleRule curlyBracesChecker;
 
   @Override
   public void eval(JsFileProperties[] userCodes) throws IOException,
       ScriptException {
     init();
     styleErrors.append(lineLengthChecker.checkRule(userCodes));
+    styleErrors.append(curlyBracesChecker.checkRule(userCodes));
     String userCode = computeUserCode(userCodes);
     String code = computeUseStrictCode(userCode);
     try {
@@ -40,6 +42,7 @@ public class StyleChecker implements JsTestPlugin {
   private void init() {
     styleErrors = new StringBuilder();
     lineLengthChecker = new LineLengthChecker(maxLineLength);
+    curlyBracesChecker = new CurlyBracesChecker();
   }
 
   private String format(final String msg, final JsFileProperties[] userCodes) {

@@ -12,6 +12,11 @@ import jstester.jsparser.JsParser;
 class CurlyBracesChecker implements StyleRule {
 
   private static final JsParser PARSER = new JsParser();
+  private final CurlyBracesErrorMessageComputer errorMessageComputer;
+
+  CurlyBracesChecker() {
+    errorMessageComputer = new CurlyBracesErrorMessageComputer();
+  }
 
   @Override
   public String checkRule(JsFileProperties[] userCodes) {
@@ -26,45 +31,39 @@ class CurlyBracesChecker implements StyleRule {
     List<Statement> statements = PARSER.parse(file.toString());
     List<Integer> errorCharPositions = new ArrayList<Integer>();
     getErrorPositions(statements, errorCharPositions, file.toString());
-    return computeErrorMsg(file, errorCharPositions);
+    return errorMessageComputer.computeErrorMessage(file, errorCharPositions);
   }
 
   private void getErrorPositions(List<Statement> statements,
       List<Integer> positions, String content) {
     for (Statement statement : statements) {
-      if (statement instanceof IfNode) {
-        IfNode ifNode = (IfNode) statement;
-        if (content.charAt(ifNode.getPass().getStart()) != '{') {
-          positions.add(ifNode.getTest().getFinish());
-        }
-      } else if (statement instanceof LoopNode) {
-        LoopNode loopNode = (LoopNode) statement;
-        if (content.charAt(loopNode.getBody().getStart()) != '{') {
-          positions.add(loopNode.getTest().getFinish());
-        }
-      }
-      getErrorPositions(PARSER.getStatements(statement), positions, content);
+      getErrorPositions(positions, content, statement);
     }
   }
 
-  private String computeErrorMsg(JsFileProperties file,
-      List<Integer> errorCharPositions) {
-    String[] content = file.toString().split("\n");
-    StringBuilder messages = new StringBuilder();
-    String name = file.getFileName();
-    int cnt = 0;
-    int currentIndex = 0;
-    for (int i = 0; i < content.length; ++i) {
-      if (currentIndex == errorCharPositions.size()) {
-        break;
-      }
-      cnt += content[i].length() + 1;
-      if (cnt >= errorCharPositions.get(currentIndex)) {
-        messages
-            .append("Missing curly brace (" + name + ":" + (i + 1) + ").\n");
-        ++currentIndex;
-      }
+  private void getErrorPositions(List<Integer> positions, String content,
+      Statement statement) {
+    if (statement instanceof IfNode) {
+      IfNode ifNode = (IfNode) statement;
+      ifStarCheck(positions, content, ifNode);
+    } else if (statement instanceof LoopNode) {
+      LoopNode loopNode = (LoopNode) statement;
+      loopStartCheck(positions, content, loopNode);
     }
-    return messages.toString();
+    getErrorPositions(PARSER.getStatements(statement), positions, content);
+  }
+
+  private void ifStarCheck(List<Integer> positions, String content,
+      IfNode ifNode) {
+    if (content.charAt(ifNode.getPass().getStart()) != '{') {
+      positions.add(ifNode.getTest().getFinish());
+    }
+  }
+
+  private void loopStartCheck(List<Integer> positions, String content,
+      LoopNode loopNode) {
+    if (content.charAt(loopNode.getBody().getStart()) != '{') {
+      positions.add(loopNode.getTest().getFinish());
+    }
   }
 }
