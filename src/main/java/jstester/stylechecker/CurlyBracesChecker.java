@@ -11,6 +11,7 @@ import jstester.jsparser.JsParser;
 
 class CurlyBracesChecker implements StyleRule {
 
+  private static final char CURLY = '{';
   private static final JsParser PARSER = new JsParser();
   private final CurlyBracesErrorMessageComputer errorMessageComputer;
 
@@ -45,7 +46,10 @@ class CurlyBracesChecker implements StyleRule {
       Statement statement) {
     if (statement instanceof IfNode) {
       IfNode ifNode = (IfNode) statement;
-      ifStarCheck(positions, content, ifNode);
+      ifStartCheck(positions, content, ifNode);
+      if (ifNode.getFail() != null) {
+        ifElseCheck(positions, content, ifNode);
+      }
     } else if (statement instanceof LoopNode) {
       LoopNode loopNode = (LoopNode) statement;
       loopStartCheck(positions, content, loopNode);
@@ -53,16 +57,23 @@ class CurlyBracesChecker implements StyleRule {
     getErrorPositions(PARSER.getStatements(statement), positions, content);
   }
 
-  private void ifStarCheck(List<Integer> positions, String content,
+  private void ifStartCheck(List<Integer> positions, String content,
       IfNode ifNode) {
-    if (content.charAt(ifNode.getPass().getStart()) != '{') {
+    if (content.charAt(ifNode.getPass().getStart()) != CURLY) {
       positions.add(ifNode.getTest().getFinish());
+    }
+  }
+
+  private void ifElseCheck(List<Integer> positions, String content,
+      IfNode ifNode) {
+    if (content.charAt(ifNode.getFail().getStart()) != CURLY) {
+      positions.add(ifNode.getFail().getStart() - 1);
     }
   }
 
   private void loopStartCheck(List<Integer> positions, String content,
       LoopNode loopNode) {
-    if (content.charAt(loopNode.getBody().getStart()) != '{') {
+    if (content.charAt(loopNode.getBody().getStart()) != CURLY) {
       positions.add(loopNode.getTest().getFinish());
     }
   }

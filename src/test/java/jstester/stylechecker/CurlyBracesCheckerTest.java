@@ -30,6 +30,20 @@ public class CurlyBracesCheckerTest {
   }
 
   @Test
+  public void testElse() {
+    StringBuilder fileBuilder = new StringBuilder();
+    fileBuilder.append("if (true) {}\n");
+    fileBuilder.append("if (true) {\nvar a = 2;} else\nvar c = 3;\n");
+    String content = fileBuilder.toString();
+    String fileName = "curly_braces.js";
+    String expectedMsg = "Missing curly brace (curly_braces.js:3).\n";
+    JsFileProperties file = new JsFileProperties(fileName, 2, content);
+    JsFileProperties[] userCodes = new JsFileProperties[] {file};
+    String actualMsg = curlyChecker.checkRule(userCodes);
+    assertEquals(expectedMsg, actualMsg);
+  }
+
+  @Test
   public void testIfInFunction() {
     StringBuilder fileBuilder = new StringBuilder();
     fileBuilder.append("var func = function() {\n");
