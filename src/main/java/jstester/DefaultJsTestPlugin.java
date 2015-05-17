@@ -1,6 +1,7 @@
 package jstester;
 
 import static jstester.JsTester.JS_TEST_UTIL;
+import static jstester.JsTester.JsTestException;
 import static jstester.JsTester.computeUserCode;
 import static jstester.JsTester.getCode;
 import static jstester.JsTester.newEngine;
@@ -20,8 +21,7 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
   private String statistics;
 
   @Override
-  public void eval(JsFileProperties[] userCodes) throws IOException,
-      ScriptException {
+  public void eval(JsFileProperties[] userCodes) throws IOException {
     if (userCodes.length == 0) {
       return;
     }
@@ -31,11 +31,19 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     final String runningTests = "runAllTests();\ngetTestErrors();";
     final String runnerCode = skipTests + runningTests;
     final String code = computeCode(testUtil, userCode, runnerCode);
-    String error = (String) newEngine().eval(code);
+    String error = evalEngine(code);
     String stacktraces = computeLogAndStatAndRemoveFromError(error);
     StackTraceProperties stackProps = new StackTraceProperties(testUtil,
         userCodes);
     lastStackTraces = formattingStackTraces(stacktraces, stackProps);
+  }
+
+  private String evalEngine(final String code) {
+    try {
+      return (String) newEngine().eval(code);
+    } catch (ScriptException e) {
+      throw new JsTestException(e);
+    }
   }
 
   /**
@@ -49,7 +57,7 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     StringBuilder errorBuilder = new StringBuilder();
     StringBuilder logBuilder = new StringBuilder();
     for (String row : error.split("\\n")) {
-      if (row.trim().equals("")) {
+      if ("".equals(row.trim())) {
         continue;
       }
       if (row.startsWith(LOG_START)) {

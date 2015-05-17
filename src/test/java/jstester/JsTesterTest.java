@@ -6,8 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import javax.script.ScriptException;
-
 import jstester.JsTester.JsTestException;
 
 import org.junit.Test;
@@ -15,20 +13,20 @@ import org.junit.Test;
 public class JsTesterTest {
 
   @Test
-  public void testSimpleJsTest() throws IOException, ScriptException {
+  public void testSimpleJsTest() throws IOException {
     String testFile = "jstester.simple_test";
     String srcFile = "jstester.source";
     runTestsAndGetErrors(testFile, srcFile);
   }
 
   @Test
-  public void testAssertsJsTest() throws IOException, ScriptException {
+  public void testAssertsJsTest() throws IOException {
     String testFile = "jstester.test_for_assertations";
     assertEquals("", getStackTrace(testFile));
   }
 
   @Test
-  public void testStackTrace() throws IOException, ScriptException {
+  public void testStackTrace() throws IOException {
     String testFile = "jstester.test_for_stack_trace";
     String srcFile = "jstester.source";
     String stackTraces = getStackTrace(testFile, srcFile);
@@ -40,13 +38,13 @@ public class JsTesterTest {
   }
 
   @Test
-  public void testSkip() throws IOException, ScriptException {
+  public void testSkip() throws IOException {
     String testFile = "jstester.skip_some_tests";
     runTestsAndGetErrors(testFile);
   }
 
   @Test
-  public void testLog() throws IOException, ScriptException {
+  public void testLog() throws IOException {
     String testFile = "jstester.test_for_log";
     JsTestPluginAggregator aggregator = JsTestPluginAggregator.empty();
     runTestsAndGetErrors(aggregator, testFile);
@@ -55,7 +53,7 @@ public class JsTesterTest {
   }
 
   @Test
-  public void testMultiSourceStackTrace() throws IOException, ScriptException {
+  public void testMultiSourceStackTrace() throws IOException {
     String testFile = "jstester.test_for_multi_source";
     String srcFile1 = "jstester.source";
     String srcFile2 = "jstester.caller";
@@ -67,8 +65,7 @@ public class JsTesterTest {
         .contains("at testCallBug (jstester.test_for_multi_source.js:5)"));
   }
 
-  private String getStackTrace(String... codes) throws IOException,
-      ScriptException {
+  private String getStackTrace(String... codes) throws IOException {
     try {
       runTestsAndGetErrors(codes);
       return "";

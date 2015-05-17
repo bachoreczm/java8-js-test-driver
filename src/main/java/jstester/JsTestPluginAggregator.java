@@ -57,8 +57,7 @@ public class JsTestPluginAggregator implements Iterable<JsTestPlugin> {
     if (index == 1) {
       return defaultPlugin;
     } else {
-      JsTestPlugin plugin = plugins.get(index - 2);
-      return plugin;
+      return plugins.get(index - 2);
     }
   }
 

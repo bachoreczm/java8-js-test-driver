@@ -19,8 +19,7 @@ public class StyleChecker implements JsTestPlugin {
   private StringBuilder styleErrors;
 
   @Override
-  public void eval(JsFileProperties[] userCodes) throws IOException,
-      ScriptException {
+  public void eval(JsFileProperties[] userCodes) throws IOException {
     init();
     checkLineLength(userCodes);
     String userCode = computeUserCode(userCodes);

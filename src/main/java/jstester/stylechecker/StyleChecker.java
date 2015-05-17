@@ -25,8 +25,7 @@ public class StyleChecker implements JsTestPlugin {
   private StyleRule curlyBracesChecker;
 
   @Override
-  public void eval(JsFileProperties[] userCodes) throws IOException,
-      ScriptException {
+  public void eval(JsFileProperties[] userCodes) throws IOException {
     init();
     styleErrors.append(lineLengthChecker.checkRule(userCodes));
     styleErrors.append(curlyBracesChecker.checkRule(userCodes));
@@ -35,7 +34,7 @@ public class StyleChecker implements JsTestPlugin {
     try {
       newEngine().eval(code);
     } catch (ScriptException ex) {
-      styleErrors.append(format(ex.getMessage(), userCodes) + "\n");
+      styleErrors.append(format(ex, userCodes) + "\n");
     }
   }
 
@@ -45,8 +44,8 @@ public class StyleChecker implements JsTestPlugin {
     curlyBracesChecker = new CurlyBracesChecker();
   }
 
-  private String format(final String msg, final JsFileProperties[] userCodes) {
-    String[] splittedMsg = msg.split("line number ");
+  private String format(final Exception e, final JsFileProperties[] userCodes) {
+    String[] splittedMsg = e.getMessage().split("line number ");
     int lineNum = Integer.parseInt(splittedMsg[1]);
     if (strictMode) {
       lineNum -= 1;

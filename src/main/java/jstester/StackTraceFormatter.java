@@ -5,6 +5,8 @@ import java.util.List;
 
 final class StackTraceFormatter {
 
+  private static final String EVAL = "<eval>";
+
   private StackTraceFormatter() {
   }
 
@@ -18,8 +20,7 @@ final class StackTraceFormatter {
 
   static String formattingStackTraces(String stackTraces,
       StackTraceProperties stackProps) {
-    String formattedTraces = formatTraceRows(stackTraces, stackProps);
-    return formattedTraces;
+    return formatTraceRows(stackTraces, stackProps);
   }
 
   private static String formatTraceRows(String stackTraces,
@@ -70,7 +71,7 @@ final class StackTraceFormatter {
 
   private static String formatUserRow(final String row,
       StackTraceProperties stackProps) {
-    if (row.contains("<eval>")) {
+    if (row.contains(EVAL)) {
       final String partOne = row.split(":")[0];
       final String partTwo = row.split(":")[1];
       final String lineNumString = partTwo.substring(0, partTwo.length() - 1);
@@ -82,7 +83,7 @@ final class StackTraceFormatter {
         ++codeIndex;
       }
       final String line = partOne + ":" + lineNum + ")";
-      return line.replace("<eval>", getJsFile(stackProps, codeIndex));
+      return line.replace(EVAL, getJsFile(stackProps, codeIndex));
     } else {
       return row;
     }
@@ -101,7 +102,7 @@ final class StackTraceFormatter {
   private static String formatAssertationCalls(final String row) {
     for (String assertation : getAsserts()) {
       if (row.trim().startsWith("at " + assertation)) {
-        return row.replace("<eval>", "test_util.js");
+        return row.replace(EVAL, "test_util.js");
       }
     }
     return row;

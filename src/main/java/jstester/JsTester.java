@@ -7,7 +7,9 @@ import java.io.InputStreamReader;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Javascript source tester util.
@@ -18,6 +20,7 @@ public final class JsTester {
    * The path of the test_util.js
    */
   public static final String JS_TEST_UTIL = "javascript.test.test_util";
+  private static final Logger LOGGER = LoggerFactory.getLogger(JsTester.class);
 
   private JsTester() {
   }
@@ -37,11 +40,9 @@ public final class JsTester {
    * @return the errors string
    * @throws IOException
    *           if can not read the source files
-   * @throws ScriptException
-   *           if something wrong with the evaulation of the js files
    */
   public static String runTestsAndGetErrors(String... jsFileNames)
-      throws IOException, ScriptException {
+      throws IOException {
     return runTestsAndGetErrors(JsTestPluginAggregator.empty(), jsFileNames);
   }
 
@@ -54,18 +55,16 @@ public final class JsTester {
    * @return the errors string
    * @throws IOException
    *           if can not read the source files
-   * @throws ScriptException
-   *           if something wrong with the evaulation of the js files
    */
   public static String runTestsAndGetErrors(JsTestPluginAggregator plugins,
-      String... jsFileNames) throws IOException, ScriptException {
+      String... jsFileNames) throws IOException {
     final JsFileProperties[] userCodes = getCodes(jsFileNames);
     for (JsTestPlugin plugin : plugins) {
       plugin.eval(userCodes);
     }
     String lastStackTraces = plugins.getDefault().getLastStackTraces();
     if (!"".equals(lastStackTraces)) {
-      System.out.println(plugins.getDefault().getStatAndLog());
+      LOGGER.error(plugins.getDefault().getStatAndLog());
       throw new JsTestException(lastStackTraces);
     }
     return plugins.getDefault().getStatAndLog();
@@ -131,6 +130,14 @@ public final class JsTester {
      */
     public JsTestException(String msg) {
       super(msg);
+    }
+
+    /**
+     * @param ex
+     *          packaged exception
+     */
+    public JsTestException(Exception ex) {
+      super(ex);
     }
   }
 }

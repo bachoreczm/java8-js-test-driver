@@ -47,8 +47,7 @@ public class JsTestPluginAggregatorTest {
     private int called = 0;
 
     @Override
-    public void eval(JsFileProperties[] userCodes) throws IOException,
-        ScriptException {
+    public void eval(JsFileProperties[] userCodes) throws IOException {
       ++called;
     }
 
