@@ -1,4 +1,4 @@
-package jstester.stylechecker;
+package jstester.plugins.stylechecker;
 
 import jstester.JsFileProperties;
 

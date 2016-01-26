@@ -1,4 +1,6 @@
-package jstester;
+package jstester.plugins.defaultplugin;
+
+import jstester.JsFileProperties;
 
 final class StackTraceProperties {
 

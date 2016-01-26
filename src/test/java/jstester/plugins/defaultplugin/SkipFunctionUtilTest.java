@@ -1,6 +1,8 @@
-package jstester;
+package jstester.plugins.defaultplugin;
 
+import static general.TestUtil.assertHasPrivateConstructor;
 import static org.junit.Assert.assertEquals;
+import jstester.JsFileProperties;
 
 import org.junit.Test;
 
@@ -9,10 +11,15 @@ public class SkipFunctionUtilTest {
   private static final String SKIP_FUNCTION = "skipTestFunction";
 
   @Test
+  public void testPrivateConstructor() throws ReflectiveOperationException {
+    assertHasPrivateConstructor(SkipFunctionUtil.class);
+  }
+
+  @Test
   public void testSkip() {
     String fileContent = getTestFileContent();
     JsFileProperties props = new JsFileProperties("file", 5, fileContent);
-    String skipped = SkipFunctionUtil.computeSkipTestFunctions(props);
+    String skipped = SkipFunctionUtil.computeSkips(props);
     assertEquals(SKIP_FUNCTION + "('SkipTest', 'secondTest');\n", skipped);
   }
 

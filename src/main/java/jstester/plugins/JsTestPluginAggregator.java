@@ -1,8 +1,10 @@
-package jstester;
+package jstester.plugins;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import jstester.plugins.defaultplugin.DefaultJsTestPlugin;
 
 public class JsTestPluginAggregator implements Iterable<JsTestPlugin> {
 

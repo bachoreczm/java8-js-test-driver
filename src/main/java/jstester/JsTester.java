@@ -1,12 +1,13 @@
 package jstester;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+
+import jstester.exceptions.JsTestException;
+import jstester.plugins.JsTestPlugin;
+import jstester.plugins.JsTestPluginAggregator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,86 +59,16 @@ public final class JsTester {
    */
   public static String runTestsAndGetErrors(JsTestPluginAggregator plugins,
       String... jsFileNames) throws IOException {
-    final JsFileProperties[] userCodes = getCodes(jsFileNames);
+    final JsFileProperties[] userCodes = JsContentsUtil.readFiles(jsFileNames);
     for (JsTestPlugin plugin : plugins) {
       plugin.eval(userCodes);
     }
     String lastStackTraces = plugins.getDefault().getLastStackTraces();
+    String lastRunResults = plugins.getDefault().getLastRunResults();
     if (!"".equals(lastStackTraces)) {
-      LOGGER.error(plugins.getDefault().getStatAndLog());
+      LOGGER.error(lastRunResults);
       throw new JsTestException(lastStackTraces);
     }
-    return plugins.getDefault().getStatAndLog();
-  }
-
-  private static JsFileProperties[] getCodes(String[] srcFiles)
-      throws IOException {
-    JsFileProperties[] codes = new JsFileProperties[srcFiles.length];
-    for (int i = 0; i < srcFiles.length; ++i) {
-      codes[i] = getCode(srcFiles[i]);
-    }
-    return codes;
-  }
-
-  /**
-   * @param codes
-   *          the javascript codes
-   * @return concatenating the given codes.
-   */
-  public static String computeUserCode(JsFileProperties[] codes) {
-    StringBuilder userCode = new StringBuilder();
-    for (int i = 0; i < codes.length; ++i) {
-      if (i > 0) {
-        userCode.append("\n");
-      }
-      userCode.append(codes[i].toString());
-    }
-    return userCode.toString();
-  }
-
-  /**
-   * Reading a js file from the classpath.
-   *
-   * @param path
-   *          file's path
-   * @return a {@link JsFileProperties} which contains the js file's content
-   * @throws IOException
-   *           if an I/O error occurs
-   */
-  public static JsFileProperties getCode(String path) throws IOException {
-    String fileName = "/" + path.replaceAll("\\.", "/") + ".js";
-    InputStream is = JsTester.class.getResourceAsStream(fileName);
-    InputStreamReader isReader = new InputStreamReader(is);
-    BufferedReader reader = new BufferedReader(isReader);
-    final StringBuilder sb = new StringBuilder();
-    String line = reader.readLine();
-    int lineNumber = 0;
-    while (line != null) {
-      sb.append(line + "\n");
-      line = reader.readLine();
-      ++lineNumber;
-    }
-    return new JsFileProperties(path, lineNumber, sb.toString());
-  }
-
-  public static class JsTestException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * @param msg
-     *          the exception message
-     */
-    public JsTestException(String msg) {
-      super(msg);
-    }
-
-    /**
-     * @param ex
-     *          packaged exception
-     */
-    public JsTestException(Exception ex) {
-      super(ex);
-    }
+    return lastRunResults;
   }
 }

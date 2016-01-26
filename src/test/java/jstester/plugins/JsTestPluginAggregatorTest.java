@@ -1,11 +1,17 @@
-package jstester;
+package jstester.plugins;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Iterator;
 
 import javax.script.ScriptException;
+
+import jstester.JsFileProperties;
+import jstester.plugins.defaultplugin.DefaultJsTestPlugin;
 
 import org.junit.Test;
 
@@ -40,19 +46,5 @@ public class JsTestPluginAggregatorTest {
     assertTrue(iterator.hasNext());
     assertEquals(DefaultJsTestPlugin.class, iterator.next().getClass());
     assertFalse(iterator.hasNext());
-  }
-
-  private static class PluginMock implements JsTestPlugin {
-
-    private int called = 0;
-
-    @Override
-    public void eval(JsFileProperties[] userCodes) throws IOException {
-      ++called;
-    }
-
-    public int getCalled() {
-      return called;
-    }
   }
 }

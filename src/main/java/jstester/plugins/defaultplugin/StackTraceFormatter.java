@@ -1,4 +1,4 @@
-package jstester;
+package jstester.plugins.defaultplugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ final class StackTraceFormatter {
     return assertations;
   }
 
-  static String formattingStackTraces(String stackTraces,
+  static String format(String stackTraces,
       StackTraceProperties stackProps) {
     return formatTraceRows(stackTraces, stackProps);
   }

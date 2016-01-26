@@ -1,14 +1,14 @@
-package jstester.stylechecker;
+package jstester.plugins.stylechecker;
 
-import static jstester.JsTester.computeUserCode;
 import static jstester.JsTester.newEngine;
 
 import java.io.IOException;
 
 import javax.script.ScriptException;
 
+import jstester.JsContentsUtil;
 import jstester.JsFileProperties;
-import jstester.JsTestPlugin;
+import jstester.plugins.JsTestPlugin;
 
 public class StyleChecker implements JsTestPlugin {
 
@@ -29,7 +29,7 @@ public class StyleChecker implements JsTestPlugin {
     init();
     styleErrors.append(lineLengthChecker.checkRule(userCodes));
     styleErrors.append(curlyBracesChecker.checkRule(userCodes));
-    String userCode = computeUserCode(userCodes);
+    String userCode = JsContentsUtil.computeUserCode(userCodes);
     String code = computeUseStrictCode(userCode);
     try {
       newEngine().eval(code);
@@ -105,5 +105,15 @@ public class StyleChecker implements JsTestPlugin {
     public StyleError(String msg) {
       super(msg);
     }
+  }
+
+  @Override
+  public String getName() {
+    return "Stylechecker";
+  }
+
+  @Override
+  public String getLastRunResults() {
+    return styleErrors.toString();
   }
 }

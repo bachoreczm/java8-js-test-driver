@@ -1,6 +1,6 @@
-package jstester.stylechecker;
+package jstester.plugins.stylechecker;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import jstester.JsFileProperties;
 
 import org.junit.Before;

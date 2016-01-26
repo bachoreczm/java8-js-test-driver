@@ -1,32 +1,49 @@
 package jstester;
 
+import static jstester.JsTester.JS_TEST_UTIL;
 import static jstester.JsTester.runTestsAndGetErrors;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import jstester.JsTester.JsTestException;
+import javax.script.ScriptException;
+
+import jstester.exceptions.JsTestException;
+import jstester.plugins.JsTestPluginAggregator;
+import general.TestUtil;
 
 import org.junit.Test;
 
 public class JsTesterTest {
 
   @Test
-  public void testSimpleJsTest() throws IOException {
+  public void testPrivateConstructor() throws ReflectiveOperationException {
+    TestUtil.assertHasPrivateConstructor(JsTester.class);
+  }
+
+  @Test
+  public void testConstants() {
+    assertNotNull(JsTester.newEngine());
+    assertEquals("javascript.test.test_util", JS_TEST_UTIL);
+  }
+
+  @Test
+  public void testSimpleJsTest() throws IOException, ScriptException {
     String testFile = "jstester.simple_test";
     String srcFile = "jstester.source";
     runTestsAndGetErrors(testFile, srcFile);
   }
 
   @Test
-  public void testAssertsJsTest() throws IOException {
+  public void testAssertsJsTest() throws IOException, ScriptException {
     String testFile = "jstester.test_for_assertations";
     assertEquals("", getStackTrace(testFile));
   }
 
   @Test
-  public void testStackTrace() throws IOException {
+  public void testStackTrace() throws IOException, ScriptException {
     String testFile = "jstester.test_for_stack_trace";
     String srcFile = "jstester.source";
     String stackTraces = getStackTrace(testFile, srcFile);

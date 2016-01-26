@@ -1,10 +1,12 @@
-package jstester;
+package jstester.plugins.defaultplugin;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 
 import javax.script.ScriptException;
+
+import jstester.JsFileProperties;
 
 import org.junit.Test;
 

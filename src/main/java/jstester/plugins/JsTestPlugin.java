@@ -1,6 +1,8 @@
-package jstester;
+package jstester.plugins;
 
 import java.io.IOException;
+
+import jstester.JsFileProperties;
 
 /**
  * Plugin for {@link JsTester}. You can run js codes with it, then you can get
@@ -13,9 +15,19 @@ public interface JsTestPlugin {
    * ), and set some field.
    *
    * @param userCodes
-   *          the javascript code.
+   *          the javascript codes.
    * @throws IOException
    *           if an I/O error occurs
    */
   void eval(JsFileProperties[] userCodes) throws IOException;
+
+  /**
+   * @return the name of the plugin.
+   */
+  String getName();
+
+  /**
+   * @return the results of the last run.
+   */
+  String getLastRunResults();
 }

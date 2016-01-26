@@ -1,16 +1,16 @@
-package jstester;
+package jstester.plugins.defaultplugin;
 
 import static jstester.JsTester.JS_TEST_UTIL;
-import static jstester.JsTester.JsTestException;
-import static jstester.JsTester.computeUserCode;
-import static jstester.JsTester.getCode;
 import static jstester.JsTester.newEngine;
-import static jstester.SkipFunctionUtil.computeSkipTestFunctions;
-import static jstester.StackTraceFormatter.formattingStackTraces;
 
 import java.io.IOException;
 
 import javax.script.ScriptException;
+
+import jstester.JsFileProperties;
+import jstester.JsContentsUtil;
+import jstester.exceptions.JsTestException;
+import jstester.plugins.JsTestPlugin;
 
 public class DefaultJsTestPlugin implements JsTestPlugin {
 
@@ -19,23 +19,23 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
   private String lastStackTraces;
   private String lastLogs;
   private String statistics;
+  private static final String RUNCOMMAND = "runAllTests();\ngetTestErrors();";
 
   @Override
   public void eval(JsFileProperties[] userCodes) throws IOException {
     if (userCodes.length == 0) {
       return;
     }
-    final String userCode = computeUserCode(userCodes);
-    final JsFileProperties testUtil = getCode(JS_TEST_UTIL);
-    final String skipTests = computeSkipTestFunctions(userCodes);
-    final String runningTests = "runAllTests();\ngetTestErrors();";
-    final String runnerCode = skipTests + runningTests;
+    final String userCode = JsContentsUtil.computeUserCode(userCodes);
+    final JsFileProperties testUtil = JsContentsUtil.readFile(JS_TEST_UTIL);
+    final String skipTests = SkipFunctionUtil.computeSkips(userCodes);
+    final String runnerCode = skipTests + RUNCOMMAND;
     final String code = computeCode(testUtil, userCode, runnerCode);
     String error = evalEngine(code);
     String stacktraces = computeLogAndStatAndRemoveFromError(error);
     StackTraceProperties stackProps = new StackTraceProperties(testUtil,
         userCodes);
-    lastStackTraces = formattingStackTraces(stacktraces, stackProps);
+    lastStackTraces = StackTraceFormatter.format(stacktraces, stackProps);
   }
 
   private String evalEngine(final String code) {
@@ -84,13 +84,6 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     return testUtil + "\n" + userCode + "\n" + runningTests;
   }
 
-  /**
-   * @return the log messages and statistics
-   */
-  public String getStatAndLog() {
-    return lastLogs + formatStatistics();
-  }
-
   private String formatStatistics() {
     StringBuilder sb = new StringBuilder();
     sb.append("-----------\n");
@@ -100,5 +93,15 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     sb.append("Error: " + splittedStats[1] + ". ");
     sb.append("Skipped: " + splittedStats[2]);
     return sb.toString();
+  }
+
+  @Override
+  public String getName() {
+    return "Javascript tester";
+  }
+
+  @Override
+  public String getLastRunResults() {
+    return lastLogs + formatStatistics();
   }
 }
