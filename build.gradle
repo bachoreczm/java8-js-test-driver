@@ -16,5 +16,11 @@ dependencies {
 }
 
 checkstyle {
-    toolVersion = "6.0"
+  toolVersion = "6.0"
+}
+
+test {
+  testLogging {
+    exceptionFormat = 'full'
+  }
 }
