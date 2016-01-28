@@ -10,11 +10,11 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
+import org.junit.Test;
+
+import general.TestUtil;
 import jstester.exceptions.JsTestException;
 import jstester.plugins.JsTestPluginAggregator;
-import general.TestUtil;
-
-import org.junit.Test;
 
 public class JsTesterTest {
 
@@ -49,9 +49,10 @@ public class JsTesterTest {
     String stackTraces = getStackTrace(testFile, srcFile);
     assertTrue(stackTraces.contains("AssertationError"));
     assertTrue(stackTraces.contains("at assertEquals (test_util.js:44)"));
-    assertTrue(stackTraces.contains("at bug (jstester.source.js:17)"));
-    assertTrue(stackTraces
-        .contains("at test4 (jstester.test_for_stack_trace.js:20)"));
+    assertTrue(stackTraces,
+        stackTraces.contains("at bug (jstester.source.js:17)"));
+    assertTrue(
+        stackTraces.contains("at test4 (jstester.test_for_stack_trace.js:20)"));
   }
 
   @Test
@@ -75,7 +76,8 @@ public class JsTesterTest {
     String srcFile1 = "jstester.source";
     String srcFile2 = "jstester.caller";
     String stackTraces = getStackTrace(testFile, srcFile1, srcFile2);
-    assertTrue(stackTraces.contains("TypeError: Cannot call undefined"));
+    assertTrue(stackTraces,
+        stackTraces.contains("TypeError: Cannot call undefined"));
     assertTrue(stackTraces.contains("at bug (jstester.source.js:17)"));
     assertTrue(stackTraces.contains("at callBug (jstester.caller.js:6)"));
     assertTrue(stackTraces
