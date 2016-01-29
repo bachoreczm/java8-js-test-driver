@@ -6,7 +6,7 @@ import java.util.List;
 import jdk.nashorn.internal.ir.IfNode;
 import jdk.nashorn.internal.ir.LoopNode;
 import jdk.nashorn.internal.ir.Statement;
-import jstester.JsFileProperties;
+import jstester.JsFile;
 import jstester.jsparser.JsParser;
 
 class CurlyBracesChecker implements StyleRule {
@@ -20,15 +20,15 @@ class CurlyBracesChecker implements StyleRule {
   }
 
   @Override
-  public String checkRule(JsFileProperties[] userCodes) {
+  public String checkRule(JsFile[] userCodes) {
     StringBuilder errors = new StringBuilder();
-    for (JsFileProperties file : userCodes) {
+    for (JsFile file : userCodes) {
       errors.append(getFileErrors(file));
     }
     return errors.toString();
   }
 
-  private String getFileErrors(JsFileProperties file) {
+  private String getFileErrors(JsFile file) {
     List<Statement> statements = PARSER.parse(file.toString());
     List<Integer> errorCharPositions = new ArrayList<Integer>();
     getErrorPositions(statements, errorCharPositions, file.toString());

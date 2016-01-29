@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 import javax.script.ScriptException;
 
-import jstester.JsFileProperties;
+import jstester.JsFile;
 import jstester.plugins.defaultplugin.DefaultJsTestPlugin;
 
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class JsTestPluginAggregatorTest {
     aggregator.add(plugin1);
     aggregator.add(plugin2);
     for (JsTestPlugin plugin : aggregator) {
-      plugin.eval(new JsFileProperties[0]);
+      plugin.eval(new JsFile[0]);
     }
     assertEquals(1, ((PluginMock) plugin1).getCalled());
     assertEquals(1, ((PluginMock) plugin2).getCalled());

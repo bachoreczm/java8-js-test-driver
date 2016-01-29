@@ -2,7 +2,7 @@ package jstester.plugins.defaultplugin;
 
 import static general.TestUtil.assertHasPrivateConstructor;
 import static org.junit.Assert.assertEquals;
-import jstester.JsFileProperties;
+import jstester.JsFile;
 
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class SkipFunctionUtilTest {
   @Test
   public void testSkip() {
     String fileContent = getTestFileContent();
-    JsFileProperties props = new JsFileProperties("file", 5, fileContent);
+    JsFile props = new JsFile("file", 5, fileContent);
     String skipped = SkipFunctionUtil.computeSkips(props);
     assertEquals(SKIP_FUNCTION + "('SkipTest', 'secondTest');\n", skipped);
   }

@@ -18,37 +18,36 @@ final class StackTraceFormatter {
     return assertations;
   }
 
-  static String format(String stackTraces,
+  static String format(Stacktraces stackTraces,
       StackTraceProperties stackProps) {
     return formatTraceRows(stackTraces, stackProps);
   }
 
-  private static String formatTraceRows(String stackTraces,
+  private static String formatTraceRows(Stacktraces stacktraces,
       StackTraceProperties stackProps) {
-    String[] stacks = stackTraces.split("\\n\\n");
     StringBuilder formattedRows = new StringBuilder();
-    for (int i = 0; i < stacks.length; ++i) {
+    int i = 0;
+    for (Stacktrace currentStacktrace : stacktraces) {
       if (i > 0) {
         formattedRows.append("\n");
       }
-      String[] rows = getStackByIndex(stacks, i);
-      formattedRows.append(formatOneStackTrace(stackProps, rows));
+      formattedRows.append(formatOneStackTrace(stackProps, currentStacktrace));
+      ++i;
     }
     return formattedRows.toString();
   }
 
   private static String formatOneStackTrace(StackTraceProperties stackProps,
-      String[] rows) {
+      Stacktrace stacktrace) {
     boolean needNewLine = false;
     StringBuilder formattedRows = new StringBuilder();
-    for (int j = 0; j < rows.length; ++j) {
+    for (String row : stacktrace) {
       if (needNewLine) {
         formattedRows.append("\n");
       }
-      final String row = rows[j];
       if (notTestUtilStack(row)) {
-        final String formattedAssertation = formatAssertationCalls(row);
-        final String formattedUserRow = formatUserRow(formattedAssertation,
+        final String formattedAssertion = formatAssertationCalls(row);
+        final String formattedUserRow = formatUserRow(formattedAssertion,
             stackProps);
         formattedRows.append(formattedUserRow);
         needNewLine = true;
@@ -57,11 +56,6 @@ final class StackTraceFormatter {
       }
     }
     return formattedRows.toString();
-  }
-
-  private static String[] getStackByIndex(String[] stacks, int i) {
-    String stack = stacks[i];
-    return stack.split("\\n");
   }
 
   private static boolean notTestUtilStack(final String row) {

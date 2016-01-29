@@ -2,14 +2,14 @@ package jstester.plugins;
 
 import java.io.IOException;
 
-import jstester.JsFileProperties;
+import jstester.JsFile;
 
 class PluginMock implements JsTestPlugin {
 
   private int called = 0;
 
   @Override
-  public void eval(JsFileProperties[] userCodes) throws IOException {
+  public void eval(JsFile[] userCodes) throws IOException {
     ++called;
   }
 

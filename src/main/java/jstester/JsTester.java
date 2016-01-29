@@ -59,7 +59,7 @@ public final class JsTester {
    */
   public static String runTestsAndGetErrors(JsTestPluginAggregator plugins,
       String... jsFileNames) throws IOException {
-    final JsFileProperties[] userCodes = JsContentsUtil.readFiles(jsFileNames);
+    final JsFile[] userCodes = JsContentsUtil.readFiles(jsFileNames);
     for (JsTestPlugin plugin : plugins) {
       plugin.eval(userCodes);
     }

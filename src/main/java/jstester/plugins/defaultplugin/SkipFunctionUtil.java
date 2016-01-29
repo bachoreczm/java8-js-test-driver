@@ -1,6 +1,6 @@
 package jstester.plugins.defaultplugin;
 
-import jstester.JsFileProperties;
+import jstester.JsFile;
 
 final class SkipFunctionUtil {
 
@@ -12,9 +12,9 @@ final class SkipFunctionUtil {
   private SkipFunctionUtil() {
   }
 
-  static String computeSkips(JsFileProperties... userCodes) {
+  static String computeSkips(JsFile... userCodes) {
     StringBuilder skipTests = new StringBuilder();
-    for (JsFileProperties file : userCodes) {
+    for (JsFile file : userCodes) {
       String content = file.toString();
       String[] lines = content.split("\\n");
       for (int i = 0; i < lines.length; ++i) {

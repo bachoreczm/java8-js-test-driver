@@ -15,11 +15,11 @@ public final class JsContentsUtil {
    *
    * @param path
    *          file's path
-   * @return a {@link JsFileProperties} which contains the js file's content
+   * @return a {@link JsFile} which contains the js file's content
    * @throws IOException
    *           if an I/O error occurs
    */
-  public static JsFileProperties readFile(String path) throws IOException {
+  public static JsFile readFile(String path) throws IOException {
     String fileName = "/" + path.replaceAll("\\.", "/") + ".js";
     InputStream is = JsTester.class.getResourceAsStream(fileName);
     InputStreamReader isReader = new InputStreamReader(is);
@@ -32,7 +32,7 @@ public final class JsContentsUtil {
       line = reader.readLine();
       ++lineNumber;
     }
-    return new JsFileProperties(path, lineNumber, sb.toString());
+    return new JsFile(path, lineNumber, sb.toString());
   }
 
   /**
@@ -40,14 +40,14 @@ public final class JsContentsUtil {
    *
    * @param srcFiles
    *          files' paths
-   * @return {@link JsFileProperties} array which contains the js files'
+   * @return {@link JsFile} array which contains the js files'
    *         contents
    * @throws IOException
    *           if an I/O error occurs
    */
-  public static JsFileProperties[] readFiles(String[] srcFiles)
+  public static JsFile[] readFiles(String[] srcFiles)
       throws IOException {
-    JsFileProperties[] codes = new JsFileProperties[srcFiles.length];
+    JsFile[] codes = new JsFile[srcFiles.length];
     for (int i = 0; i < srcFiles.length; ++i) {
       codes[i] = readFile(srcFiles[i]);
     }
@@ -59,7 +59,7 @@ public final class JsContentsUtil {
    *          the javascript codes
    * @return concatenating the given codes.
    */
-  public static String computeUserCode(JsFileProperties[] codes) {
+  public static String computeUserCode(JsFile[] codes) {
     StringBuilder userCode = new StringBuilder();
     for (int i = 0; i < codes.length; ++i) {
       if (i > 0) {

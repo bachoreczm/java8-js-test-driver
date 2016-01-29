@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.script.ScriptException;
 
 import jstester.JsContentsUtil;
-import jstester.JsFileProperties;
+import jstester.JsFile;
 import jstester.plugins.JsTestPlugin;
 
 public class StyleChecker implements JsTestPlugin {
@@ -25,7 +25,7 @@ public class StyleChecker implements JsTestPlugin {
   private StyleRule curlyBracesChecker;
 
   @Override
-  public void eval(JsFileProperties[] userCodes) throws IOException {
+  public void eval(JsFile[] userCodes) throws IOException {
     init();
     styleErrors.append(lineLengthChecker.checkRule(userCodes));
     styleErrors.append(curlyBracesChecker.checkRule(userCodes));
@@ -44,7 +44,7 @@ public class StyleChecker implements JsTestPlugin {
     curlyBracesChecker = new CurlyBracesChecker();
   }
 
-  private String format(final Exception e, final JsFileProperties[] userCodes) {
+  private String format(final Exception e, final JsFile[] userCodes) {
     String[] splittedMsg = e.getMessage().split("line number ");
     int lineNum = Integer.parseInt(splittedMsg[1]);
     if (strictMode) {

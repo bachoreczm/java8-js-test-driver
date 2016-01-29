@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
-import jstester.JsFileProperties;
 import jstester.JsContentsUtil;
+import jstester.JsFile;
 import jstester.exceptions.JsTestException;
 import jstester.plugins.JsTestPlugin;
 
@@ -22,17 +22,17 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
   private static final String RUNCOMMAND = "runAllTests();\ngetTestErrors();";
 
   @Override
-  public void eval(JsFileProperties[] userCodes) throws IOException {
+  public void eval(JsFile[] userCodes) throws IOException {
     if (userCodes.length == 0) {
       return;
     }
     final String userCode = JsContentsUtil.computeUserCode(userCodes);
-    final JsFileProperties testUtil = JsContentsUtil.readFile(JS_TEST_UTIL);
+    final JsFile testUtil = JsContentsUtil.readFile(JS_TEST_UTIL);
     final String skipTests = SkipFunctionUtil.computeSkips(userCodes);
     final String runnerCode = skipTests + RUNCOMMAND;
     final String code = computeCode(testUtil, userCode, runnerCode);
     String error = evalEngine(code);
-    String stacktraces = computeLogAndStatAndRemoveFromError(error);
+    Stacktraces stacktraces = computeLogAndStatAndRemoveFromError(error);
     StackTraceProperties stackProps = new StackTraceProperties(testUtil,
         userCodes);
     lastStackTraces = StackTraceFormatter.format(stacktraces, stackProps);
@@ -53,7 +53,7 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     return lastLogs;
   }
 
-  private String computeLogAndStatAndRemoveFromError(final String error) {
+  private Stacktraces computeLogAndStatAndRemoveFromError(final String error) {
     StringBuilder errorBuilder = new StringBuilder();
     StringBuilder logBuilder = new StringBuilder();
     for (String row : error.split("\\n")) {
@@ -69,17 +69,17 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
       }
     }
     lastLogs = logBuilder.toString();
-    return errorBuilder.toString();
+    return new Stacktraces(errorBuilder.toString());
   }
 
   /**
-   * @return the last {@link #eval(JsFileProperties[])} result.
+   * @return the last {@link #eval(JsFile[])} result.
    */
   public String getLastStackTraces() {
     return lastStackTraces;
   }
 
-  private static String computeCode(JsFileProperties testUtil, String userCode,
+  private static String computeCode(JsFile testUtil, String userCode,
       String runningTests) {
     return testUtil + "\n" + userCode + "\n" + runningTests;
   }

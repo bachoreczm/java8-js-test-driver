@@ -1,7 +1,7 @@
 package jstester.plugins.stylechecker;
 
 import static org.junit.Assert.assertEquals;
-import jstester.JsFileProperties;
+import jstester.JsFile;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +23,8 @@ public class CurlyBracesCheckerTest {
     String content = fileBuilder.toString();
     String fileName = "curly_braces.js";
     String expectedMsg = "Missing curly brace (curly_braces.js:2).\n";
-    JsFileProperties file = new JsFileProperties(fileName, 2, content);
-    JsFileProperties[] userCodes = new JsFileProperties[] {file};
+    JsFile file = new JsFile(fileName, 2, content);
+    JsFile[] userCodes = new JsFile[] {file};
     String actualMsg = curlyChecker.checkRule(userCodes);
     assertEquals(expectedMsg, actualMsg);
   }
@@ -37,8 +37,8 @@ public class CurlyBracesCheckerTest {
     String content = fileBuilder.toString();
     String fileName = "curly_braces.js";
     String expectedMsg = "Missing curly brace (curly_braces.js:3).\n";
-    JsFileProperties file = new JsFileProperties(fileName, 2, content);
-    JsFileProperties[] userCodes = new JsFileProperties[] {file};
+    JsFile file = new JsFile(fileName, 2, content);
+    JsFile[] userCodes = new JsFile[] {file};
     String actualMsg = curlyChecker.checkRule(userCodes);
     assertEquals(expectedMsg, actualMsg);
   }
@@ -53,8 +53,8 @@ public class CurlyBracesCheckerTest {
     String content = fileBuilder.toString();
     String fileName = "curly_braces.js";
     String expectedMsg = "Missing curly brace (curly_braces.js:3).\n";
-    JsFileProperties file = new JsFileProperties(fileName, 2, content);
-    JsFileProperties[] userCodes = new JsFileProperties[] {file};
+    JsFile file = new JsFile(fileName, 2, content);
+    JsFile[] userCodes = new JsFile[] {file};
     String actualMsg = curlyChecker.checkRule(userCodes);
     assertEquals(expectedMsg, actualMsg);
   }
@@ -62,20 +62,20 @@ public class CurlyBracesCheckerTest {
   @Test
   public void testForWithTwoFilesFirstCorrectSecondIncorrect() {
     String okContent = "var ok = 'ok';";
-    JsFileProperties fileOk = new JsFileProperties("ok", 1, okContent);
+    JsFile fileOk = new JsFile("ok", 1, okContent);
     String fileContent = "var a = 0;\nfor (var i = 0; i < 3; ++i)\nvar a = 2;";
     String fileName = "curly_braces.js";
-    JsFileProperties file = new JsFileProperties(fileName, 1, fileContent);
+    JsFile file = new JsFile(fileName, 1, fileContent);
     String expectedMsg = "Missing curly brace (curly_braces.js:2).\n";
-    JsFileProperties[] userCodes = new JsFileProperties[] {fileOk, file};
+    JsFile[] userCodes = new JsFile[] {fileOk, file};
     String actualMsg = curlyChecker.checkRule(userCodes);
     assertEquals(expectedMsg, actualMsg);
   }
 
   @Test
   public void testWithEmptyFile() {
-    JsFileProperties file = new JsFileProperties("name", 0, "\n");
-    JsFileProperties[] userCodes = new JsFileProperties[] {file};
+    JsFile file = new JsFile("name", 0, "\n");
+    JsFile[] userCodes = new JsFile[] {file};
     String actualMsg = curlyChecker.checkRule(userCodes);
     assertEquals("", actualMsg);
   }

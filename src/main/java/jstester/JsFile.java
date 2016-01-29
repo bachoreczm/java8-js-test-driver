@@ -1,6 +1,6 @@
 package jstester;
 
-public final class JsFileProperties {
+public final class JsFile {
 
   private final String name;
   private final int lineNums;
@@ -16,7 +16,7 @@ public final class JsFileProperties {
    * @param fContent
    *          content of file.
    */
-  public JsFileProperties(String fileName, int lineNumbers, String fContent) {
+  public JsFile(String fileName, int lineNumbers, String fContent) {
     name = fileName;
     lineNums = lineNumbers;
     content = fContent;

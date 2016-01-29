@@ -1,5 +1,6 @@
 package jstester;
 
+import static general.TestUtil.assertHasPrivateConstructor;
 import static jstester.JsTester.JS_TEST_UTIL;
 import static jstester.JsTester.runTestsAndGetErrors;
 import static org.junit.Assert.assertEquals;
@@ -12,7 +13,6 @@ import javax.script.ScriptException;
 
 import org.junit.Test;
 
-import general.TestUtil;
 import jstester.exceptions.JsTestException;
 import jstester.plugins.JsTestPluginAggregator;
 
@@ -20,7 +20,7 @@ public class JsTesterTest {
 
   @Test
   public void testPrivateConstructor() throws ReflectiveOperationException {
-    TestUtil.assertHasPrivateConstructor(JsTester.class);
+    assertHasPrivateConstructor(JsTester.class);
   }
 
   @Test

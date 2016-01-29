@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
-import jstester.JsFileProperties;
+import jstester.JsFile;
 
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class DefaultJsTestPluginTest {
   @Test
   public void testSpeedUp() throws IOException, ScriptException {
     DefaultJsTestPlugin defaultPlugin = new DefaultJsTestPlugin();
-    defaultPlugin.eval(new JsFileProperties[0]);
+    defaultPlugin.eval(new JsFile[0]);
     assertNull(defaultPlugin.getLastStackTraces());
   }
 }

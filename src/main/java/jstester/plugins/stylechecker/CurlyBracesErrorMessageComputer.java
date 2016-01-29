@@ -2,13 +2,13 @@ package jstester.plugins.stylechecker;
 
 import java.util.List;
 
-import jstester.JsFileProperties;
+import jstester.JsFile;
 
 class CurlyBracesErrorMessageComputer {
 
   private static final String LINE_SEPARATOR = "\n";
 
-  String computeErrorMessage(JsFileProperties file, List<Integer> positions) {
+  String computeErrorMessage(JsFile file, List<Integer> positions) {
     String[] contentRows = computeSplittedRows(file);
     StringBuilder messages = new StringBuilder();
     String name = file.getFileName();
@@ -31,7 +31,7 @@ class CurlyBracesErrorMessageComputer {
     return currentIndex == positions.size();
   }
 
-  private String[] computeSplittedRows(JsFileProperties file) {
+  private String[] computeSplittedRows(JsFile file) {
     String content = file.toString();
     return content.split(LINE_SEPARATOR);
   }

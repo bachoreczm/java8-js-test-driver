@@ -1,23 +1,22 @@
 package jstester.plugins.defaultplugin;
 
-import jstester.JsFileProperties;
+import jstester.JsFile;
 
 final class StackTraceProperties {
 
-  private final JsFileProperties testUtil;
-  private final JsFileProperties[] codes;
+  private final JsFile testUtil;
+  private final JsFile[] codes;
 
-  StackTraceProperties(JsFileProperties testUtilProps,
-      JsFileProperties... sourceProps) {
+  StackTraceProperties(JsFile testUtilProps, JsFile... sourceProps) {
     testUtil = testUtilProps;
     codes = sourceProps;
   }
 
-  JsFileProperties getTestUtil() {
+  JsFile getTestUtil() {
     return testUtil;
   }
 
-  JsFileProperties getCodeByIndex(int i) {
+  JsFile getCodeByIndex(int i) {
     return codes[i];
   }
 }
