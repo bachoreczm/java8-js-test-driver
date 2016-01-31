@@ -16,10 +16,10 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
 
   private static final String LOG_START = "JAVA8JSTDLOG:";
   private static final String STATISTICS_START = "JAVA8JSTDSTATISTICS:";
+  private static final String RUNCOMMAND = "runAllTests();\ngetTestErrors();";
   private String lastStackTraces;
   private String lastLogs;
   private String statistics;
-  private static final String RUNCOMMAND = "runAllTests();\ngetTestErrors();";
 
   @Override
   public void eval(JsFile[] userCodes) throws IOException {
@@ -33,9 +33,8 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     final String code = computeCode(testUtil, userCode, runnerCode);
     String error = evalEngine(code);
     Stacktraces stacktraces = computeLogAndStatAndRemoveFromError(error);
-    StackTraceProperties stackProps = new StackTraceProperties(testUtil,
-        userCodes);
-    lastStackTraces = StackTraceFormatter.format(stacktraces, stackProps);
+    JsCodeBase jsCodeBase = new JsCodeBase(testUtil, userCodes);
+    lastStackTraces = stacktraces.formatTraceRows(jsCodeBase);
   }
 
   private String evalEngine(final String code) {

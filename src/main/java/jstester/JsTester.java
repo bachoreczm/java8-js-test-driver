@@ -1,16 +1,18 @@
 package jstester;
 
+import static jstester.JsContentsUtil.readFiles;
+
 import java.io.IOException;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jstester.exceptions.JsTestException;
 import jstester.plugins.JsTestPlugin;
 import jstester.plugins.JsTestPluginAggregator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Javascript source tester util.
@@ -59,7 +61,7 @@ public final class JsTester {
    */
   public static String runTestsAndGetErrors(JsTestPluginAggregator plugins,
       String... jsFileNames) throws IOException {
-    final JsFile[] userCodes = JsContentsUtil.readFiles(jsFileNames);
+    final JsFile[] userCodes = readFiles(jsFileNames);
     for (JsTestPlugin plugin : plugins) {
       plugin.eval(userCodes);
     }
