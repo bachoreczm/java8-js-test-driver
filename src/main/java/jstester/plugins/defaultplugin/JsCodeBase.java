@@ -16,18 +16,18 @@ final class JsCodeBase {
     userCodes = sourceProps;
   }
 
-  String formatStacktraceRow(String row) {
-    final String formattedAssertion = formatAssertationCalls(row);
+  String formatStacktraceRow(StacktraceRow row) {
+    final String formattedAssertion = formatAssertationCallsOf(row);
     return formatUserRow(formattedAssertion);
   }
 
-  private static String formatAssertationCalls(final String row) {
+  private static String formatAssertationCallsOf(final StacktraceRow row) {
     for (String assertation : getAsserts()) {
-      if (row.trim().startsWith("at " + assertation)) {
-        return row.replace(EVAL, "test_util.js");
+      if (row.startsWithAtAssertion(assertation)) {
+        return row.withTheFileNameOfTestUtil();
       }
     }
-    return row;
+    return row.asString();
   }
 
   private static List<String> getAsserts() {

@@ -26,15 +26,15 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     if (userCodes.length == 0) {
       return;
     }
-    final String userCode = JsContentsUtil.computeUserCode(userCodes);
-    final JsFile testUtil = JsContentsUtil.readFile(JS_TEST_UTIL);
-    final String skipTests = SkipFunctionUtil.computeSkips(userCodes);
-    final String runnerCode = skipTests + RUNCOMMAND;
-    final String code = computeCode(testUtil, userCode, runnerCode);
-    String error = evalEngine(code);
-    Stacktraces stacktraces = computeLogAndStatAndRemoveFromError(error);
+    String rawUserCode = JsContentsUtil.computeUserCode(userCodes);
+    JsFile testUtil = JsContentsUtil.readFile(JS_TEST_UTIL);
+    String skipTests = SkipFunctionUtil.computeSkips(userCodes);
+    String runnerCode = skipTests + RUNCOMMAND;
+    String code = computeCode(testUtil, rawUserCode, runnerCode);
+    String result = evalEngine(code);
+    StacktraceFormatter formatter = computeLogAndStatAndRemoveFromError(result);
     JsCodeBase jsCodeBase = new JsCodeBase(testUtil, userCodes);
-    lastStackTraces = stacktraces.formatTraceRows(jsCodeBase);
+    lastStackTraces = formatter.formatStacktraceRows(jsCodeBase);
   }
 
   private String evalEngine(final String code) {
@@ -52,7 +52,8 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     return lastLogs;
   }
 
-  private Stacktraces computeLogAndStatAndRemoveFromError(final String error) {
+  private StacktraceFormatter
+      computeLogAndStatAndRemoveFromError(final String error) {
     StringBuilder errorBuilder = new StringBuilder();
     StringBuilder logBuilder = new StringBuilder();
     for (String row : error.split("\\n")) {
@@ -68,7 +69,7 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
       }
     }
     lastLogs = logBuilder.toString();
-    return new Stacktraces(errorBuilder.toString());
+    return new StacktraceFormatter(errorBuilder.toString());
   }
 
   /**

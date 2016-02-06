@@ -1,8 +1,10 @@
 package jstester.plugins.defaultplugin;
 
+import static jstester.plugins.defaultplugin.StacktraceRow.newStacktraceRowFrom;
+
 import java.util.Iterator;
 
-class Stacktrace implements Iterable<String> {
+class Stacktrace implements Iterable<StacktraceRow> {
 
   private final String[] rows;
 
@@ -11,8 +13,8 @@ class Stacktrace implements Iterable<String> {
   }
 
   @Override
-  public Iterator<String> iterator() {
-    return new Iterator<String>() {
+  public Iterator<StacktraceRow> iterator() {
+    return new Iterator<StacktraceRow>() {
 
       private int i = 0;
 
@@ -22,8 +24,8 @@ class Stacktrace implements Iterable<String> {
       }
 
       @Override
-      public String next() {
-        return rows[i++];
+      public StacktraceRow next() {
+        return newStacktraceRowFrom(rows[i++]);
       }
     };
   }
