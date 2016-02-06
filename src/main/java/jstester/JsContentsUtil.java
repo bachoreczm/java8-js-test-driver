@@ -19,20 +19,24 @@ public final class JsContentsUtil {
    * @throws IOException
    *           if an I/O error occurs
    */
-  public static JsFile readFile(String path) throws IOException {
-    String fileName = "/" + path.replaceAll("\\.", "/") + ".js";
-    InputStream is = JsTester.class.getResourceAsStream(fileName);
-    InputStreamReader isReader = new InputStreamReader(is);
-    BufferedReader reader = new BufferedReader(isReader);
-    final StringBuilder sb = new StringBuilder();
-    String line = reader.readLine();
-    int lineNumber = 0;
-    while (line != null) {
-      sb.append(line + "\n");
-      line = reader.readLine();
-      ++lineNumber;
+  public static JsFile readFile(String path) {
+    try {
+      String fileName = "/" + path.replaceAll("\\.", "/") + ".js";
+      InputStream is = JsTester.class.getResourceAsStream(fileName);
+      InputStreamReader isReader = new InputStreamReader(is);
+      BufferedReader reader = new BufferedReader(isReader);
+      final StringBuilder sb = new StringBuilder();
+      String line = reader.readLine();
+      int lineNumber = 0;
+      while (line != null) {
+        sb.append(line + "\n");
+        line = reader.readLine();
+        ++lineNumber;
+      }
+      return new JsFile(path, lineNumber, sb.toString());
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
     }
-    return new JsFile(path, lineNumber, sb.toString());
   }
 
   /**
@@ -40,13 +44,11 @@ public final class JsContentsUtil {
    *
    * @param srcFiles
    *          files' paths
-   * @return {@link JsFile} array which contains the js files'
-   *         contents
+   * @return {@link JsFile} array which contains the js files' contents
    * @throws IOException
    *           if an I/O error occurs
    */
-  public static JsFile[] readFiles(String[] srcFiles)
-      throws IOException {
+  public static JsFile[] readFiles(String[] srcFiles) throws IOException {
     JsFile[] codes = new JsFile[srcFiles.length];
     for (int i = 0; i < srcFiles.length; ++i) {
       codes[i] = readFile(srcFiles[i]);

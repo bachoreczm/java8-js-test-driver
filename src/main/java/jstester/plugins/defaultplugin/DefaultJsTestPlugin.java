@@ -3,8 +3,6 @@ package jstester.plugins.defaultplugin;
 import static jstester.JsTester.JS_TEST_UTIL;
 import static jstester.JsTester.newEngine;
 
-import java.io.IOException;
-
 import javax.script.ScriptException;
 
 import jstester.JsContentsUtil;
@@ -17,59 +15,89 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
   private static final String LOG_START = "JAVA8JSTDLOG:";
   private static final String STATISTICS_START = "JAVA8JSTDSTATISTICS:";
   private static final String RUNCOMMAND = "runAllTests();\ngetTestErrors();";
-  private String lastStackTraces;
-  private String lastLogs;
+
+  private String rawJsCode;
+
+  private String resultOfEvaluation;
+
+  private String logs;
   private String statistics;
+  private String errors;
+
+  private String lastStackTraces;
 
   @Override
-  public void eval(JsFile[] userCodes) throws IOException {
+  public void eval(JsFile[] userCodes) {
     if (userCodes.length == 0) {
       return;
     }
-    String rawUserCode = JsContentsUtil.computeUserCode(userCodes);
-    JsFile testUtil = JsContentsUtil.readFile(JS_TEST_UTIL);
-    String skipTests = SkipFunctionUtil.computeSkips(userCodes);
-    String runnerCode = skipTests + RUNCOMMAND;
-    String code = computeCode(testUtil, rawUserCode, runnerCode);
-    String result = evalEngine(code);
-    StacktraceFormatter formatter = computeLogAndStatAndRemoveFromError(result);
-    JsCodeBase jsCodeBase = new JsCodeBase(testUtil, userCodes);
-    lastStackTraces = formatter.formatStacktraceRows(jsCodeBase);
+    preProcess(userCodes);
+    evalEngine();
+    postProcess(userCodes);
   }
 
-  private String evalEngine(final String code) {
+  private void preProcess(JsFile[] userCodes) {
+    String rawUserCode = JsContentsUtil.computeUserCode(userCodes);
+    String skipTests = SkipFunctionUtil.computeSkips(userCodes);
+    String runnerCode = skipTests + RUNCOMMAND;
+    rawJsCode = JS_TEST_UTIL + "\n" + rawUserCode + "\n" + runnerCode;
+  }
+
+  private void evalEngine() {
     try {
-      return (String) newEngine().eval(code);
+      resultOfEvaluation = (String) newEngine().eval(rawJsCode);
     } catch (ScriptException e) {
       throw new JsTestException(e);
     }
+  }
+
+  private void postProcess(JsFile[] userCodes) {
+    computeStatistics(resultOfEvaluation);
+    computeLogs(resultOfEvaluation);
+    computeErrors(resultOfEvaluation);
+
+    StacktraceFormatter formatter = new StacktraceFormatter(errors);
+    JsCodeBase jsCodeBase = new JsCodeBase(userCodes);
+    lastStackTraces = formatter.formatStacktraceRows(jsCodeBase);
+  }
+
+  private void computeStatistics(final String result) {
+    for (String row : result.split("\\n")) {
+      if (row.startsWith(STATISTICS_START)) {
+        statistics = row.split(STATISTICS_START)[1] + "\n";
+        return;
+      }
+    }
+  }
+
+  private void computeLogs(final String result) {
+    StringBuilder logBuilder = new StringBuilder();
+    for (String row : result.split("\\n")) {
+      if (row.startsWith(LOG_START)) {
+        logBuilder.append(row.split(LOG_START)[1] + "\n");
+      }
+    }
+    logs = logBuilder.toString();
+  }
+
+  private void computeErrors(final String result) {
+    StringBuilder errorBuilder = new StringBuilder();
+    for (String row : result.split("\\n")) {
+      if ("".equals(row.trim())) {
+        continue;
+      }
+      if (!row.startsWith(LOG_START) && !row.startsWith(STATISTICS_START)) {
+        errorBuilder.append(row + "\n");
+      }
+    }
+    errors = errorBuilder.toString();
   }
 
   /**
    * @return the last run's log messages.
    */
   public String getLog() {
-    return lastLogs;
-  }
-
-  private StacktraceFormatter
-      computeLogAndStatAndRemoveFromError(final String error) {
-    StringBuilder errorBuilder = new StringBuilder();
-    StringBuilder logBuilder = new StringBuilder();
-    for (String row : error.split("\\n")) {
-      if ("".equals(row.trim())) {
-        continue;
-      }
-      if (row.startsWith(LOG_START)) {
-        logBuilder.append(row.split(LOG_START)[1] + "\n");
-      } else if (row.startsWith(STATISTICS_START)) {
-        statistics = row.split(STATISTICS_START)[1] + "\n";
-      } else {
-        errorBuilder.append(row + "\n");
-      }
-    }
-    lastLogs = logBuilder.toString();
-    return new StacktraceFormatter(errorBuilder.toString());
+    return logs;
   }
 
   /**
@@ -77,11 +105,6 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
    */
   public String getLastStackTraces() {
     return lastStackTraces;
-  }
-
-  private static String computeCode(JsFile testUtil, String userCode,
-      String runningTests) {
-    return testUtil + "\n" + userCode + "\n" + runningTests;
   }
 
   private String formatStatistics() {
@@ -102,6 +125,6 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
 
   @Override
   public String getLastRunResults() {
-    return lastLogs + formatStatistics();
+    return logs + formatStatistics();
   }
 }

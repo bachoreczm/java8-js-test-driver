@@ -1,5 +1,7 @@
 package jstester.plugins.defaultplugin;
 
+import static jstester.JsTester.JS_TEST_UTIL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,11 +10,9 @@ import jstester.JsFile;
 final class JsCodeBase {
 
   private static final String EVAL = "<eval>";
-  private final JsFile testUtil;
   private final JsFile[] userCodes;
 
-  JsCodeBase(JsFile testUtilProps, JsFile... sourceProps) {
-    testUtil = testUtilProps;
+  JsCodeBase(JsFile... sourceProps) {
     userCodes = sourceProps;
   }
 
@@ -44,7 +44,7 @@ final class JsCodeBase {
       final String partTwo = row.split(":")[1];
       final String lineNumString = partTwo.substring(0, partTwo.length() - 1);
       int lineNum = Integer.parseInt(lineNumString);
-      lineNum -= testUtil.getLineNumbers() + 1;
+      lineNum -= JS_TEST_UTIL.getLineNumbers() + 1;
       int codeIndex = 0;
       while (canDecraseLineNum(lineNum, codeIndex)) {
         lineNum -= userCodes[codeIndex].getLineNumbers() + 1;

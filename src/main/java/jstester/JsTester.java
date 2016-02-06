@@ -1,5 +1,6 @@
 package jstester;
 
+import static jstester.JsContentsUtil.readFile;
 import static jstester.JsContentsUtil.readFiles;
 
 import java.io.IOException;
@@ -19,10 +20,11 @@ import jstester.plugins.JsTestPluginAggregator;
  */
 public final class JsTester {
 
+  private static final String JS_TEST_UTIL_PATH = "javascript.test.test_util";
   /**
-   * The path of the test_util.js
+   * The content of the test_util.js
    */
-  public static final String JS_TEST_UTIL = "javascript.test.test_util";
+  public static final JsFile JS_TEST_UTIL = readFile(JS_TEST_UTIL_PATH);
   private static final Logger LOGGER = LoggerFactory.getLogger(JsTester.class);
 
   private JsTester() {

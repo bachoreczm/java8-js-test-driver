@@ -1,7 +1,6 @@
 package jstester;
 
 import static general.TestUtil.assertHasPrivateConstructor;
-import static jstester.JsTester.JS_TEST_UTIL;
 import static jstester.JsTester.runTestsAndGetErrors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,7 +25,6 @@ public class JsTesterTest {
   @Test
   public void testConstants() {
     assertNotNull(JsTester.newEngine());
-    assertEquals("javascript.test.test_util", JS_TEST_UTIL);
   }
 
   @Test
