@@ -3,17 +3,52 @@ package jstester.plugins.defaultplugin;
 import static jstester.JsTester.JS_TEST_UTIL;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import jstester.JsFile;
 
-final class JsCodeBase {
+public class JsFileCollection implements Iterable<JsFile> {
 
   private static final String EVAL = "<eval>";
-  private final JsFile[] userCodes;
 
-  JsCodeBase(JsFile... sourceProps) {
-    userCodes = sourceProps;
+  private final JsFile[] jsFiles;
+
+  public JsFileCollection(JsFile... jsFiles) {
+    this.jsFiles = jsFiles;
+  }
+
+  public int size() {
+    return jsFiles.length;
+  }
+
+  public String computeContent() {
+    StringBuilder userCode = new StringBuilder();
+    for (int i = 0; i < jsFiles.length; ++i) {
+      if (i > 0) {
+        userCode.append("\n");
+      }
+      userCode.append(jsFiles[i].toString());
+    }
+    return userCode.toString();
+  }
+
+  @Override
+  public Iterator<JsFile> iterator() {
+    return new Iterator<JsFile>() {
+
+      private int i = 0;
+
+      @Override
+      public boolean hasNext() {
+        return i < jsFiles.length;
+      }
+
+      @Override
+      public JsFile next() {
+        return jsFiles[i++];
+      }
+    };
   }
 
   String formatStacktraceRow(StacktraceRow row) {
@@ -47,7 +82,7 @@ final class JsCodeBase {
       lineNum -= JS_TEST_UTIL.getLineNumbers() + 1;
       int codeIndex = 0;
       while (canDecraseLineNum(lineNum, codeIndex)) {
-        lineNum -= userCodes[codeIndex].getLineNumbers() + 1;
+        lineNum -= jsFiles[codeIndex].getLineNumbers() + 1;
         ++codeIndex;
       }
       final String line = partOne + ":" + lineNum + ")";
@@ -58,11 +93,28 @@ final class JsCodeBase {
   }
 
   private String getJsFileName(int codeIndex) {
-    return userCodes[codeIndex].getFileName() + ".js";
+    return jsFiles[codeIndex].getFileName() + ".js";
   }
 
   private boolean canDecraseLineNum(int lineNum, int codeIndex) {
-    int lineNumbers = userCodes[codeIndex].getLineNumbers();
+    int lineNumbers = jsFiles[codeIndex].getLineNumbers();
     return lineNum - lineNumbers - 1 > 0;
+  }
+
+  public String formatException(final Exception e, boolean strictMode) {
+    String[] splittedMsg = e.getMessage().split("line number ");
+    int lineNum = Integer.parseInt(splittedMsg[1]);
+    if (strictMode) {
+      lineNum -= 1;
+    }
+    int codeIndex = 0;
+    while (lineNum - jsFiles[codeIndex].getLineNumbers() - 1 > 0) {
+      lineNum -= jsFiles[codeIndex].getLineNumbers() + 1;
+      ++codeIndex;
+    }
+    String actualFileName = jsFiles[codeIndex].getFileName();
+    String firstPart = splittedMsg[0];
+    String filenameMsg = firstPart.replace("<eval>", actualFileName);
+    return filenameMsg + "line number " + lineNum + ".";
   }
 }

@@ -1,6 +1,6 @@
 package jstester.plugins.stylechecker;
 
-import jstester.JsFile;
+import jstester.plugins.defaultplugin.JsFileCollection;
 
 public interface StyleRule {
 
@@ -9,5 +9,5 @@ public interface StyleRule {
    *          the js files' content
    * @return the style errors in {@link String}.
    */
-  String checkRule(JsFile[] userCodes);
+  String checkRule(JsFileCollection userCodes);
 }

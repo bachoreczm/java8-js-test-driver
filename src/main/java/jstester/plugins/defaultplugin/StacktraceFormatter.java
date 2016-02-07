@@ -8,19 +8,20 @@ class StacktraceFormatter {
     this.stacktraces = stacktraces.split("\\n\\n");
   }
 
-  String formatStacktraceRows(JsCodeBase jsCodeBase) {
+  String formatStacktraceRows(JsFileCollection jsFileCollection) {
     StringBuilder formattedRows = new StringBuilder();
     for (int i = 0; i < stacktraces.length; ++i) {
       if (i > 0) {
         formattedRows.append("\n");
       }
       Stacktrace currentStacktrace = getStacktraceByIndex(i);
-      formattedRows.append(formatOneStackTrace(jsCodeBase, currentStacktrace));
+      formattedRows
+          .append(formatOneStackTrace(jsFileCollection, currentStacktrace));
     }
     return formattedRows.toString();
   }
 
-  private static String formatOneStackTrace(JsCodeBase jsCodeBase,
+  private static String formatOneStackTrace(JsFileCollection jsFileCollection,
       Stacktrace stacktrace) {
     boolean needNewLine = false;
     StringBuilder formattedRows = new StringBuilder();
@@ -29,7 +30,7 @@ class StacktraceFormatter {
         formattedRows.append("\n");
       }
       if (stacktraceRow.belongsToUserCodeStacktrace()) {
-        String formattedRow = jsCodeBase.formatStacktraceRow(stacktraceRow);
+        String formattedRow = jsFileCollection.formatStacktraceRow(stacktraceRow);
         formattedRows.append(formattedRow);
         needNewLine = true;
       } else {

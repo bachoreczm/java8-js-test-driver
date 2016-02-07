@@ -1,47 +1,50 @@
 package jstester;
 
-import static general.TestUtil.assertHasPrivateConstructor;
-import static jstester.JsTester.runTestsAndGetErrors;
+import static jstester.JsTester.runPluginsAndGetTestResults;
+import static jstester.JsTester.runTestsAndGetTestResult;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-
-import javax.script.ScriptException;
 
 import org.junit.Test;
 
 import jstester.exceptions.JsTestException;
 import jstester.plugins.JsTestPluginAggregator;
+import jstester.plugins.defaultplugin.JsFileCollection;
 
 public class JsTesterTest {
 
   @Test
-  public void testPrivateConstructor() throws ReflectiveOperationException {
-    assertHasPrivateConstructor(JsTester.class);
-  }
-
-  @Test
-  public void testConstants() {
+  public void assertThatNewEngineReturnsANotNullNewEngine() {
     assertNotNull(JsTester.newEngine());
+    assertNotSame(JsTester.newEngine(), JsTester.newEngine());
   }
 
   @Test
-  public void testSimpleJsTest() throws IOException, ScriptException {
+  public void simpleJsTestRunsSuccessfully() {
     String testFile = "jstester.simple_test";
     String srcFile = "jstester.source";
-    runTestsAndGetErrors(testFile, srcFile);
+    runTestsAndGetTestResult(testFile, srcFile);
   }
 
   @Test
-  public void testAssertsJsTest() throws IOException, ScriptException {
-    String testFile = "jstester.test_for_assertations";
-    assertEquals("", getStackTrace(testFile));
+  public void theSequenceOfTheFilesDoesntMatter() {
+    String testFile = "jstester.simple_test";
+    String srcFile = "jstester.source";
+    runTestsAndGetTestResult(testFile, srcFile);
+    runTestsAndGetTestResult(srcFile, testFile);
   }
 
   @Test
-  public void testStackTrace() throws IOException, ScriptException {
+  public void assertionsTestRunsSuccessfully() {
+    runTestsAndGetTestResult("jstester.test_for_assertions");
+  }
+
+  @Test
+  public void testStackTrace() {
     String testFile = "jstester.test_for_stack_trace";
     String srcFile = "jstester.source";
     String stackTraces = getStackTrace(testFile, srcFile);
@@ -53,16 +56,17 @@ public class JsTesterTest {
   }
 
   @Test
-  public void testSkip() throws IOException {
-    String testFile = "jstester.skip_some_tests";
-    runTestsAndGetErrors(testFile);
+  public void skipTestRunsSuccessFullyBecauseFailingTestIsSkipped() {
+    runTestsAndGetTestResult("jstester.skip_some_tests");
   }
 
   @Test
-  public void testLog() throws IOException {
-    String testFile = "jstester.test_for_log";
-    JsTestPluginAggregator aggregator = JsTestPluginAggregator.empty();
-    runTestsAndGetErrors(aggregator, testFile);
+  public void testLog() {
+    String testFileName = "jstester.test_for_log";
+    JsFile testFile = JsContentsUtil.readFile(testFileName);
+    JsFileCollection codes = new JsFileCollection(testFile);
+    JsTestPluginAggregator aggregator = JsTestPluginAggregator.empty(codes);
+    runPluginsAndGetTestResults(aggregator);
     String expected = "this is a log message...\n";
     assertEquals(expected, aggregator.getDefault().getLog());
   }
@@ -80,9 +84,9 @@ public class JsTesterTest {
         .contains("at testCallBug (jstester.test_for_multi_source.js:5)"));
   }
 
-  private String getStackTrace(String... codes) throws IOException {
+  private String getStackTrace(String... codes) {
     try {
-      runTestsAndGetErrors(codes);
+      runTestsAndGetTestResult(codes);
       return "";
     } catch (JsTestException ex) {
       return ex.getMessage();

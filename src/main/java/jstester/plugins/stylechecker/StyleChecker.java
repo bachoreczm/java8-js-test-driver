@@ -2,19 +2,18 @@ package jstester.plugins.stylechecker;
 
 import static jstester.JsTester.newEngine;
 
-import java.io.IOException;
-
 import javax.script.ScriptException;
 
-import jstester.JsContentsUtil;
-import jstester.JsFile;
 import jstester.plugins.JsTestPlugin;
+import jstester.plugins.defaultplugin.JsFileCollection;
 
 public class StyleChecker implements JsTestPlugin {
 
   private static final String USE_STRICT = "\"use strict\";";
   private static final int DEFAULT_MAX_LINE_LENGTH = 80;
   private static final boolean DEFAULT_USE_STRICT_MODE = true;
+
+  private JsFileCollection userCodes;
 
   private boolean strictMode = DEFAULT_USE_STRICT_MODE;
   private int maxLineLength = DEFAULT_MAX_LINE_LENGTH;
@@ -24,17 +23,20 @@ public class StyleChecker implements JsTestPlugin {
   private StyleRule lineLengthChecker;
   private StyleRule curlyBracesChecker;
 
+  public StyleChecker(JsFileCollection userCodes) {
+    this.userCodes = userCodes;
+  }
+
   @Override
-  public void eval(JsFile[] userCodes) throws IOException {
+  public void eval() {
     init();
     styleErrors.append(lineLengthChecker.checkRule(userCodes));
     styleErrors.append(curlyBracesChecker.checkRule(userCodes));
-    String userCode = JsContentsUtil.computeUserCode(userCodes);
-    String code = computeUseStrictCode(userCode);
+    String code = computeUseStrictCode();
     try {
       newEngine().eval(code);
     } catch (ScriptException ex) {
-      styleErrors.append(format(ex, userCodes) + "\n");
+      styleErrors.append(userCodes.formatException(ex, strictMode) + "\n");
     }
   }
 
@@ -44,28 +46,12 @@ public class StyleChecker implements JsTestPlugin {
     curlyBracesChecker = new CurlyBracesChecker();
   }
 
-  private String format(final Exception e, final JsFile[] userCodes) {
-    String[] splittedMsg = e.getMessage().split("line number ");
-    int lineNum = Integer.parseInt(splittedMsg[1]);
+  private String computeUseStrictCode() {
+    String rawContent = userCodes.computeContent();
     if (strictMode) {
-      lineNum -= 1;
-    }
-    int codeIndex = 0;
-    while (lineNum - userCodes[codeIndex].getLineNumbers() - 1 > 0) {
-      lineNum -= userCodes[codeIndex].getLineNumbers() + 1;
-      ++codeIndex;
-    }
-    String actualFileName = userCodes[codeIndex].getFileName();
-    String firstPart = splittedMsg[0];
-    String filenameMsg = firstPart.replace("<eval>", actualFileName);
-    return filenameMsg + "line number " + lineNum + ".";
-  }
-
-  private String computeUseStrictCode(String userCode) {
-    if (strictMode) {
-      return USE_STRICT + "\n" + userCode;
+      return USE_STRICT + "\n" + rawContent;
     } else {
-      return userCode;
+      return rawContent;
     }
   }
 

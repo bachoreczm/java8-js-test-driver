@@ -1,9 +1,6 @@
 package jstester;
 
 import static jstester.JsContentsUtil.readFile;
-import static jstester.JsContentsUtil.readFiles;
-
-import java.io.IOException;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -14,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import jstester.exceptions.JsTestException;
 import jstester.plugins.JsTestPlugin;
 import jstester.plugins.JsTestPluginAggregator;
+import jstester.plugins.defaultplugin.JsFileCollection;
 
 /**
  * Javascript source tester util.
@@ -38,34 +36,15 @@ public final class JsTester {
     return manager.getEngineByName("JavaScript");
   }
 
-  /**
-   * @param jsFileNames
-   *          the js files path (e.g.: javascript.test.file_name), without the
-   *          '.js'.
-   * @return the errors string
-   * @throws IOException
-   *           if can not read the source files
-   */
-  public static String runTestsAndGetErrors(String... jsFileNames)
-      throws IOException {
-    return runTestsAndGetErrors(JsTestPluginAggregator.empty(), jsFileNames);
+  public static String runTestsAndGetTestResult(String... fileNames) {
+    JsFileCollection jsFiles = JsContentsUtil.readFiles(fileNames);
+    return runPluginsAndGetTestResults(JsTestPluginAggregator.empty(jsFiles));
   }
 
-  /**
-   * @param plugins
-   *          the {@link JsTestPlugin}s, you want to use.
-   * @param jsFileNames
-   *          the js files path (e.g.: javascript.test.file_name), without the
-   *          '.js'.
-   * @return the errors string
-   * @throws IOException
-   *           if can not read the source files
-   */
-  public static String runTestsAndGetErrors(JsTestPluginAggregator plugins,
-      String... jsFileNames) throws IOException {
-    final JsFile[] userCodes = readFiles(jsFileNames);
+  public static String
+      runPluginsAndGetTestResults(JsTestPluginAggregator plugins) {
     for (JsTestPlugin plugin : plugins) {
-      plugin.eval(userCodes);
+      plugin.eval();
     }
     String lastStackTraces = plugins.getDefault().getLastStackTraces();
     String lastRunResults = plugins.getDefault().getLastRunResults();

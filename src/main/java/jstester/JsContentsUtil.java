@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import jstester.plugins.defaultplugin.JsFileCollection;
+
 public final class JsContentsUtil {
 
   private JsContentsUtil() {
@@ -45,30 +47,12 @@ public final class JsContentsUtil {
    * @param srcFiles
    *          files' paths
    * @return {@link JsFile} array which contains the js files' contents
-   * @throws IOException
-   *           if an I/O error occurs
    */
-  public static JsFile[] readFiles(String[] srcFiles) throws IOException {
+  public static JsFileCollection readFiles(String[] srcFiles) {
     JsFile[] codes = new JsFile[srcFiles.length];
     for (int i = 0; i < srcFiles.length; ++i) {
       codes[i] = readFile(srcFiles[i]);
     }
-    return codes;
-  }
-
-  /**
-   * @param codes
-   *          the javascript codes
-   * @return concatenating the given codes.
-   */
-  public static String computeUserCode(JsFile[] codes) {
-    StringBuilder userCode = new StringBuilder();
-    for (int i = 0; i < codes.length; ++i) {
-      if (i > 0) {
-        userCode.append("\n");
-      }
-      userCode.append(codes[i].toString());
-    }
-    return userCode.toString();
+    return new JsFileCollection(codes);
   }
 }

@@ -8,6 +8,7 @@ import jdk.nashorn.internal.ir.LoopNode;
 import jdk.nashorn.internal.ir.Statement;
 import jstester.JsFile;
 import jstester.jsparser.JsParser;
+import jstester.plugins.defaultplugin.JsFileCollection;
 
 class CurlyBracesChecker implements StyleRule {
 
@@ -20,7 +21,7 @@ class CurlyBracesChecker implements StyleRule {
   }
 
   @Override
-  public String checkRule(JsFile[] userCodes) {
+  public String checkRule(JsFileCollection userCodes) {
     StringBuilder errors = new StringBuilder();
     for (JsFile file : userCodes) {
       errors.append(getFileErrors(file));

@@ -1,6 +1,7 @@
 package jstester.plugins.stylechecker;
 
 import jstester.JsFile;
+import jstester.plugins.defaultplugin.JsFileCollection;
 
 class LineLengthChecker implements StyleRule {
 
@@ -11,11 +12,11 @@ class LineLengthChecker implements StyleRule {
   }
 
   @Override
-  public String checkRule(JsFile[] userCodes) {
+  public String checkRule(JsFileCollection userCodes) {
     StringBuilder styleErrors = new StringBuilder();
-    for (int i = 0; i < userCodes.length; ++i) {
-      String[] actualFileRows = userCodes[i].toString().split("\n");
-      String actualFile = userCodes[i].getFileName();
+    for (JsFile jsFile : userCodes) {
+      String[] actualFileRows = jsFile.toString().split("\n");
+      String actualFile = jsFile.getFileName();
       for (int j = 0; j < actualFileRows.length; ++j) {
         if (actualFileRows[j].length() > lineLength) {
           String err = "Line too long (" + actualFile + ":" + (j + 1) + ").\n";

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jstester.plugins.defaultplugin.DefaultJsTestPlugin;
+import jstester.plugins.defaultplugin.JsFileCollection;
 
 public class JsTestPluginAggregator implements Iterable<JsTestPlugin> {
 
@@ -14,21 +15,23 @@ public class JsTestPluginAggregator implements Iterable<JsTestPlugin> {
   /**
    * Initialize the default plugin, and the plugins' {@link List}.
    */
-  public JsTestPluginAggregator() {
-    defaultPlugin = new DefaultJsTestPlugin();
+  public JsTestPluginAggregator(JsFileCollection jsFiles) {
+    defaultPlugin = new DefaultJsTestPlugin(jsFiles);
     plugins = new ArrayList<JsTestPlugin>();
   }
 
-  private JsTestPluginAggregator(int initCapacity) {
-    defaultPlugin = new DefaultJsTestPlugin();
+  private JsTestPluginAggregator(int initCapacity, JsFileCollection jsFiles) {
+    defaultPlugin = new DefaultJsTestPlugin(jsFiles);
     plugins = new ArrayList<JsTestPlugin>(initCapacity);
   }
 
   /**
+   * @param jsFiles
+   *          the source and test files
    * @return an aggregator which contains only the {@link DefaultJsTestPlugin}.
    */
-  public static JsTestPluginAggregator empty() {
-    return new JsTestPluginAggregator(0);
+  public static JsTestPluginAggregator empty(JsFileCollection jsFiles) {
+    return new JsTestPluginAggregator(0, jsFiles);
   }
 
   /**

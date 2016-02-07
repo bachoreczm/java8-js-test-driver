@@ -12,7 +12,7 @@ final class SkipFunctionUtil {
   private SkipFunctionUtil() {
   }
 
-  static String computeSkips(JsFile... userCodes) {
+  static String computeSkips(JsFileCollection userCodes) {
     StringBuilder skipTests = new StringBuilder();
     for (JsFile file : userCodes) {
       String content = file.toString();

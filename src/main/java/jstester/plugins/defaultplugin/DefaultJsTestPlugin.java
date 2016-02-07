@@ -5,7 +5,6 @@ import static jstester.JsTester.newEngine;
 
 import javax.script.ScriptException;
 
-import jstester.JsContentsUtil;
 import jstester.JsFile;
 import jstester.exceptions.JsTestException;
 import jstester.plugins.JsTestPlugin;
@@ -15,6 +14,8 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
   private static final String LOG_START = "JAVA8JSTDLOG:";
   private static final String STATISTICS_START = "JAVA8JSTDSTATISTICS:";
   private static final String RUNCOMMAND = "runAllTests();\ngetTestErrors();";
+
+  private JsFileCollection userCodes;
 
   private String rawJsCode;
 
@@ -26,18 +27,22 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
 
   private String lastStackTraces;
 
-  @Override
-  public void eval(JsFile[] userCodes) {
-    if (userCodes.length == 0) {
-      return;
-    }
-    preProcess(userCodes);
-    evalEngine();
-    postProcess(userCodes);
+  public DefaultJsTestPlugin(JsFileCollection userCodes) {
+    this.userCodes = userCodes;
   }
 
-  private void preProcess(JsFile[] userCodes) {
-    String rawUserCode = JsContentsUtil.computeUserCode(userCodes);
+  @Override
+  public void eval() {
+    if (userCodes.size() == 0) {
+      return;
+    }
+    preProcess();
+    evalEngine();
+    postProcess();
+  }
+
+  private void preProcess() {
+    String rawUserCode = userCodes.computeContent();
     String skipTests = SkipFunctionUtil.computeSkips(userCodes);
     String runnerCode = skipTests + RUNCOMMAND;
     rawJsCode = JS_TEST_UTIL + "\n" + rawUserCode + "\n" + runnerCode;
@@ -51,14 +56,13 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     }
   }
 
-  private void postProcess(JsFile[] userCodes) {
+  private void postProcess() {
     computeStatistics(resultOfEvaluation);
     computeLogs(resultOfEvaluation);
     computeErrors(resultOfEvaluation);
 
     StacktraceFormatter formatter = new StacktraceFormatter(errors);
-    JsCodeBase jsCodeBase = new JsCodeBase(userCodes);
-    lastStackTraces = formatter.formatStacktraceRows(jsCodeBase);
+    lastStackTraces = formatter.formatStacktraceRows(userCodes);
   }
 
   private void computeStatistics(final String result) {

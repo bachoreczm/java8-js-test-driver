@@ -1,10 +1,12 @@
 package jstester.plugins.stylechecker;
 
 import static org.junit.Assert.assertEquals;
-import jstester.JsFile;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import jstester.JsFile;
+import jstester.plugins.defaultplugin.JsFileCollection;
 
 public class CurlyBracesCheckerTest {
 
@@ -25,7 +27,7 @@ public class CurlyBracesCheckerTest {
     String expectedMsg = "Missing curly brace (curly_braces.js:2).\n";
     JsFile file = new JsFile(fileName, 2, content);
     JsFile[] userCodes = new JsFile[] {file};
-    String actualMsg = curlyChecker.checkRule(userCodes);
+    String actualMsg = curlyChecker.checkRule(new JsFileCollection(userCodes));
     assertEquals(expectedMsg, actualMsg);
   }
 
@@ -39,7 +41,7 @@ public class CurlyBracesCheckerTest {
     String expectedMsg = "Missing curly brace (curly_braces.js:3).\n";
     JsFile file = new JsFile(fileName, 2, content);
     JsFile[] userCodes = new JsFile[] {file};
-    String actualMsg = curlyChecker.checkRule(userCodes);
+    String actualMsg = curlyChecker.checkRule(new JsFileCollection(userCodes));
     assertEquals(expectedMsg, actualMsg);
   }
 
@@ -55,7 +57,7 @@ public class CurlyBracesCheckerTest {
     String expectedMsg = "Missing curly brace (curly_braces.js:3).\n";
     JsFile file = new JsFile(fileName, 2, content);
     JsFile[] userCodes = new JsFile[] {file};
-    String actualMsg = curlyChecker.checkRule(userCodes);
+    String actualMsg = curlyChecker.checkRule(new JsFileCollection(userCodes));
     assertEquals(expectedMsg, actualMsg);
   }
 
@@ -68,7 +70,7 @@ public class CurlyBracesCheckerTest {
     JsFile file = new JsFile(fileName, 1, fileContent);
     String expectedMsg = "Missing curly brace (curly_braces.js:2).\n";
     JsFile[] userCodes = new JsFile[] {fileOk, file};
-    String actualMsg = curlyChecker.checkRule(userCodes);
+    String actualMsg = curlyChecker.checkRule(new JsFileCollection(userCodes));
     assertEquals(expectedMsg, actualMsg);
   }
 
@@ -76,7 +78,7 @@ public class CurlyBracesCheckerTest {
   public void testWithEmptyFile() {
     JsFile file = new JsFile("name", 0, "\n");
     JsFile[] userCodes = new JsFile[] {file};
-    String actualMsg = curlyChecker.checkRule(userCodes);
+    String actualMsg = curlyChecker.checkRule(new JsFileCollection(userCodes));
     assertEquals("", actualMsg);
   }
 }

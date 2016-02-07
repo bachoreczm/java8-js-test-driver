@@ -2,7 +2,7 @@ package jstester.plugins;
 
 import java.io.IOException;
 
-import jstester.JsFile;
+import jstester.JsTester;
 
 /**
  * Plugin for {@link JsTester}. You can run js codes with it, then you can get
@@ -19,7 +19,7 @@ public interface JsTestPlugin {
    * @throws IOException
    *           if an I/O error occurs
    */
-  void eval(JsFile[] userCodes) throws IOException;
+  void eval();
 
   /**
    * @return the name of the plugin.
