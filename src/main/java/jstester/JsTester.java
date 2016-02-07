@@ -36,11 +36,25 @@ public final class JsTester {
     return manager.getEngineByName("JavaScript");
   }
 
+  /**
+   * Runs the js tests and returns the logs and statistics.
+   *
+   * @param fileNames
+   *          fully qualified names of the source and test files.
+   * @return logs and statistics.
+   */
   public static String runTestsAndGetTestResult(String... fileNames) {
     JsFileCollection jsFiles = JsContentsUtil.readFiles(fileNames);
     return runPluginsAndGetTestResults(JsTestPluginAggregator.empty(jsFiles));
   }
 
+  /**
+   * Runs the given plugins and returns the default plugin's log and statistics.
+   *
+   * @param plugins
+   *          js tester plugins
+   * @return default plugin's log and statistics.
+   */
   public static String
       runPluginsAndGetTestResults(JsTestPluginAggregator plugins) {
     for (JsTestPlugin plugin : plugins) {

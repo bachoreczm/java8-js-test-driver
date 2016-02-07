@@ -1,23 +1,14 @@
 package jstester.plugins;
 
-import java.io.IOException;
-
-import jstester.JsTester;
-
 /**
- * Plugin for {@link JsTester}. You can run js codes with it, then you can get
- * properties of the last evaluation.
+ * Plugin for {@link jstester.JsTester}. You can run js codes with it, then you
+ * can get properties of the last evaluation.
  */
 public interface JsTestPlugin {
 
   /**
-   * Do something with the given codes (specially run in {@link JsTester#ENGINE}
-   * ), and set some field.
-   *
-   * @param userCodes
-   *          the javascript codes.
-   * @throws IOException
-   *           if an I/O error occurs
+   * Do something with the given codes (specially run in
+   * {@link jstester.JsTester#ENGINE} ), and set some field.
    */
   void eval();
 

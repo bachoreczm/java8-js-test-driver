@@ -14,6 +14,9 @@ public class JsTestPluginAggregator implements Iterable<JsTestPlugin> {
 
   /**
    * Initialize the default plugin, and the plugins' {@link List}.
+   *
+   * @param jsFiles
+   *          the collection of the usercodes.
    */
   public JsTestPluginAggregator(JsFileCollection jsFiles) {
     defaultPlugin = new DefaultJsTestPlugin(jsFiles);

@@ -5,7 +5,6 @@ import static jstester.JsTester.newEngine;
 
 import javax.script.ScriptException;
 
-import jstester.JsFile;
 import jstester.exceptions.JsTestException;
 import jstester.plugins.JsTestPlugin;
 
@@ -27,6 +26,12 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
 
   private String lastStackTraces;
 
+  /**
+   * Initialize the default plugin, which runs the js-tests.
+   *
+   * @param userCodes
+   *          the collection of the usercodes.
+   */
   public DefaultJsTestPlugin(JsFileCollection userCodes) {
     this.userCodes = userCodes;
   }
@@ -105,7 +110,7 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
   }
 
   /**
-   * @return the last {@link #eval(JsFile[])} result.
+   * @return the last {@link #eval(jstester.JsFile[])} result.
    */
   public String getLastStackTraces() {
     return lastStackTraces;

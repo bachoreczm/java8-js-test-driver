@@ -23,6 +23,13 @@ public class StyleChecker implements JsTestPlugin {
   private StyleRule lineLengthChecker;
   private StyleRule curlyBracesChecker;
 
+  /**
+   * Initialize the style-checker, which tries to find style error in the given
+   * js-code.
+   *
+   * @param userCodes
+   *          the collection of the usercodes.
+   */
   public StyleChecker(JsFileCollection userCodes) {
     this.userCodes = userCodes;
   }
@@ -59,7 +66,7 @@ public class StyleChecker implements JsTestPlugin {
    * If there is style errors, this method throws exception, and the errors is
    * in its message.
    */
-  public void styleErrors() {
+  public void assertForNoStyleErrors() {
     String errors = styleErrors.toString();
     if (!"".equals(errors)) {
       throw new StyleError(errors);

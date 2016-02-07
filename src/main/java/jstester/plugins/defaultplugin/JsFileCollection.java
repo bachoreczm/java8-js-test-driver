@@ -14,14 +14,26 @@ public class JsFileCollection implements Iterable<JsFile> {
 
   private final JsFile[] jsFiles;
 
+  /**
+   * Initialize the collection of the given js-files.
+   *
+   * @param jsFiles
+   *          sequence of user-codes.
+   */
   public JsFileCollection(JsFile... jsFiles) {
     this.jsFiles = jsFiles;
   }
 
+  /**
+   * @return the size of this collection.
+   */
   public int size() {
     return jsFiles.length;
   }
 
+  /**
+   * @return the whole content of this collection in {@link String}.
+   */
   public String computeContent() {
     StringBuilder userCode = new StringBuilder();
     for (int i = 0; i < jsFiles.length; ++i) {
@@ -101,6 +113,13 @@ public class JsFileCollection implements Iterable<JsFile> {
     return lineNum - lineNumbers - 1 > 0;
   }
 
+  /**
+   * @param e
+   *          exception
+   * @param strictMode
+   *          true, if we use the strict mode.
+   * @return the formatted exception.
+   */
   public String formatException(final Exception e, boolean strictMode) {
     String[] splittedMsg = e.getMessage().split("line number ");
     int lineNum = Integer.parseInt(splittedMsg[1]);
