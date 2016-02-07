@@ -5,9 +5,6 @@ import jstester.JsFile;
 final class SkipFunctionUtil {
 
   private static final String SKIP_FUNCTION = "skipTestFunction";
-  private static final String PROTOTYPE = "prototype";
-  private static final String FUNCTION = "function";
-  private static final String SKIP = "skip";
 
   private SkipFunctionUtil() {
   }
@@ -18,7 +15,8 @@ final class SkipFunctionUtil {
       String content = file.toString();
       String[] lines = content.split("\\n");
       for (int i = 0; i < lines.length; ++i) {
-        if (isSkipComment(lines, i) && isFunction(lines[i + 1])) {
+        if (isSkipComment(lines, i)
+            && new Line(lines[i + 1]).isAFunctionDeclaration()) {
           skipFunction(skipTests, lines[i + 1]);
         }
       }
@@ -27,18 +25,9 @@ final class SkipFunctionUtil {
   }
 
   private static boolean isSkipComment(String[] lines, int index) {
-    String line = lines[index];
+    Line line = new Line(lines[index]);
     boolean lastLine = index == (lines.length - 1);
-    return !lastLine && isComment(line) && line.contains(SKIP);
-  }
-
-  private static boolean isFunction(final String line) {
-    String[] dotSplit = line.trim().split("\\.");
-    String[] equalSplit = line.split("=");
-    if (prototypeLine(dotSplit) && functionLine(equalSplit)) {
-      return true;
-    }
-    return false;
+    return !lastLine && line.isComment() && line.containsSkip();
   }
 
   private static void skipFunction(StringBuilder skipTests, String line) {
@@ -51,18 +40,5 @@ final class SkipFunctionUtil {
 
   private static String callSkipFunction(String testClass, String testFunc) {
     return SKIP_FUNCTION + "(" + testClass + ", " + testFunc + ");\n";
-  }
-
-  private static boolean prototypeLine(String[] dotSplit) {
-    return dotSplit.length == 3 && dotSplit[1].equals(PROTOTYPE);
-  }
-
-  private static boolean functionLine(String[] equalSplit) {
-    int length = equalSplit.length;
-    return length == 2 && equalSplit[1].trim().startsWith(FUNCTION);
-  }
-
-  private static boolean isComment(String line) {
-    return line.trim().startsWith("//");
   }
 }

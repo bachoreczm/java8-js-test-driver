@@ -62,16 +62,15 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
   }
 
   private void postProcess() {
-    computeStatistics(resultOfEvaluation);
-    computeLogs(resultOfEvaluation);
-    computeErrors(resultOfEvaluation);
+    computeStatistics();
+    computeLogs();
+    computeErrors();
 
-    StacktraceFormatter formatter = new StacktraceFormatter(errors);
-    lastStackTraces = formatter.formatStacktraceRows(userCodes);
+    formatStacktrace();
   }
 
-  private void computeStatistics(final String result) {
-    for (String row : result.split("\\n")) {
+  private void computeStatistics() {
+    for (String row : resultOfEvaluation.split("\\n")) {
       if (row.startsWith(STATISTICS_START)) {
         statistics = row.split(STATISTICS_START)[1] + "\n";
         return;
@@ -79,9 +78,9 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     }
   }
 
-  private void computeLogs(final String result) {
+  private void computeLogs() {
     StringBuilder logBuilder = new StringBuilder();
-    for (String row : result.split("\\n")) {
+    for (String row : resultOfEvaluation.split("\\n")) {
       if (row.startsWith(LOG_START)) {
         logBuilder.append(row.split(LOG_START)[1] + "\n");
       }
@@ -89,9 +88,9 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     logs = logBuilder.toString();
   }
 
-  private void computeErrors(final String result) {
+  private void computeErrors() {
     StringBuilder errorBuilder = new StringBuilder();
-    for (String row : result.split("\\n")) {
+    for (String row : resultOfEvaluation.split("\\n")) {
       if ("".equals(row.trim())) {
         continue;
       }
@@ -100,6 +99,11 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
       }
     }
     errors = errorBuilder.toString();
+  }
+
+  private void formatStacktrace() {
+    StacktraceFormatter formatter = new StacktraceFormatter(errors);
+    lastStackTraces = formatter.formatStacktraceRows(userCodes);
   }
 
   /**

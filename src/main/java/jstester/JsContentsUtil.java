@@ -48,7 +48,7 @@ public final class JsContentsUtil {
    *          files' paths
    * @return {@link JsFile} array which contains the js files' contents
    */
-  public static JsFileCollection readFiles(String[] srcFiles) {
+  public static JsFileCollection readFiles(String... srcFiles) {
     JsFile[] codes = new JsFile[srcFiles.length];
     for (int i = 0; i < srcFiles.length; ++i) {
       codes[i] = readFile(srcFiles[i]);

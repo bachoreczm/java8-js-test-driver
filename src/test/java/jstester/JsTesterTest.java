@@ -63,8 +63,7 @@ public class JsTesterTest {
   @Test
   public void testLog() {
     String testFileName = "jstester.test_for_log";
-    JsFile testFile = JsContentsUtil.readFile(testFileName);
-    JsFileCollection codes = new JsFileCollection(testFile);
+    JsFileCollection codes = JsContentsUtil.readFiles(testFileName);
     JsTestPluginAggregator aggregator = JsTestPluginAggregator.empty(codes);
     runPluginsAndGetTestResults(aggregator);
     String expected = "this is a log message...\n";
