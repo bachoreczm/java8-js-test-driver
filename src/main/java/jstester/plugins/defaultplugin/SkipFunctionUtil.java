@@ -17,7 +17,7 @@ final class SkipFunctionUtil {
       for (int i = 0; i < lines.length; ++i) {
         if (isSkipComment(lines, i)
             && new Line(lines[i + 1]).isAFunctionDeclaration()) {
-          skipFunction(skipTests, lines[i + 1]);
+          skipTests.append(skipFunction(lines[i + 1]));
         }
       }
     }
@@ -30,12 +30,11 @@ final class SkipFunctionUtil {
     return !lastLine && line.isComment() && line.containsSkip();
   }
 
-  private static void skipFunction(StringBuilder skipTests, String line) {
+  private static String skipFunction(String line) {
     String[] dotSplit = line.trim().split("\\.");
     String testClass = "'" + dotSplit[0] + "'";
     String testFunc = "'" + dotSplit[2].split("=")[0].trim() + "'";
-    String jsCode = callSkipFunction(testClass, testFunc);
-    skipTests.append(jsCode);
+    return callSkipFunction(testClass, testFunc);
   }
 
   private static String callSkipFunction(String testClass, String testFunc) {

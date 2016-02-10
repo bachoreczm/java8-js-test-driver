@@ -1,22 +1,13 @@
 package jstester.plugins.defaultplugin;
 
-import static jstester.JsTester.JS_TEST_UTIL;
-import static jstester.JsTester.newEngine;
-
-import javax.script.ScriptException;
-
-import jstester.exceptions.JsTestException;
 import jstester.plugins.JsTestPlugin;
 
 public class DefaultJsTestPlugin implements JsTestPlugin {
 
   private static final String LOG_START = "JAVA8JSTDLOG:";
   private static final String STATISTICS_START = "JAVA8JSTDSTATISTICS:";
-  private static final String RUNCOMMAND = "runAllTests();\ngetTestErrors();";
 
   private JsFileCollection userCodes;
-
-  private String rawJsCode;
 
   private String resultOfEvaluation;
 
@@ -26,6 +17,8 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
 
   private String lastStackTraces;
 
+  private final DefaultEngineRunner engineRunner;
+
   /**
    * Initialize the default plugin, which runs the js-tests.
    *
@@ -34,6 +27,7 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
    */
   public DefaultJsTestPlugin(JsFileCollection userCodes) {
     this.userCodes = userCodes;
+    this.engineRunner = new DefaultEngineRunner(userCodes);
   }
 
   @Override
@@ -41,24 +35,8 @@ public class DefaultJsTestPlugin implements JsTestPlugin {
     if (userCodes.size() == 0) {
       return;
     }
-    preProcess();
-    evalEngine();
+    resultOfEvaluation = engineRunner.run();
     postProcess();
-  }
-
-  private void preProcess() {
-    String rawUserCode = userCodes.computeContent();
-    String skipTests = SkipFunctionUtil.computeSkips(userCodes);
-    String runnerCode = skipTests + RUNCOMMAND;
-    rawJsCode = JS_TEST_UTIL + "\n" + rawUserCode + "\n" + runnerCode;
-  }
-
-  private void evalEngine() {
-    try {
-      resultOfEvaluation = (String) newEngine().eval(rawJsCode);
-    } catch (ScriptException e) {
-      throw new JsTestException(e);
-    }
   }
 
   private void postProcess() {
